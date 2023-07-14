@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { CashuMint, CashuWallet, getDecodedToken, getEncodedToken, type Token } from '@cashu/cashu-ts';
-	import Note from './Note.svelte';
+	import Note2 from './Note2.svelte';
     import type { Mint } from '../mint';
 
 	export let selectedMint: Mint;
@@ -30,7 +30,7 @@
 		</p>
 	</div>
 	<p class="font-bold">Preview:</p>
-	<Note
+	<Note2
 	denomination={selectedDenomination}
 	mintUrl={selectedMint.mintUrl}
 	token={'blablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablabla'}
@@ -41,7 +41,7 @@
 <div class="bg-white">
 
 	{#each tokens as token}
-	<Note
+	<Note2
 	denomination={token.token[0].proofs[0].amount}
 	mintUrl={token.token[0].mint}
 	token={getEncodedToken(token)}
