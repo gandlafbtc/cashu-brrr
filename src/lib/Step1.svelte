@@ -43,7 +43,7 @@
 	{/each}
 </div>
 <div class="border-dashed border-spacing-2 border-base-100 border-2 flex gap-2 justify-center p-5">
-	<input type="text" bind:value={mintUrl} class="input input-primary">
+	<input placeholder="type mint url here..." type="text" bind:value={mintUrl} class="input input-primary">
 	<button on:click={connect} class="btn {isConnecting?'btn-disabled':'btn-primary'} ">connect</button>
 </div>
 
