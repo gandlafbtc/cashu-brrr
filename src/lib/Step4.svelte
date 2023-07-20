@@ -38,8 +38,12 @@
 	<button class="btn btn-primary mt-2" on:click={()=>isBrrr=true}> BRRRRRR </button>
 </div>
 {:else}
+<div>
+	<p class="font-bold">
+		press ctrl+P to print
+	</p>
+</div>
 <div class="bg-white">
-
 	{#each tokens as token}
 	<Note2
 	denomination={token.token[0].proofs[0].amount}
