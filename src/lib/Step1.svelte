@@ -34,7 +34,7 @@
 
 <p class="text-center font-bold text-lg">connect to mint</p>
 
-<div class="flex gap-2">
+<div class="flex flex-col lg:flex-row gap-2">
 
 	{#each mints as m}
 	<button class="btn btn-xs rounded-full btn-secondary" on:click={()=> mintUrl=m}>
