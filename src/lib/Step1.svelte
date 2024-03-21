@@ -4,7 +4,7 @@
 
 	export let selectedMint: Mint
 
-	const mints = ['https://legend.lnbits.com/cashu/api/v1/4gr9Xcmz3XEkUNwiBiQGoC', 'https://8333.space:3338', 'https://nuts.semisol.dev']
+	const mints = ['https://mint.minibits.cash/Bitcoin', 'https://8333.space:3338', 'https://stpaulinternet.net/cashu/api/v1/TTcmiEDSWmkefef3XqERKv']
 
 	let mintUrl = ''
 	let isConnecting = false
