@@ -14,9 +14,9 @@
 </script>
 
 {#if !isBrrr}
-<div class="flex flex-col gap-2 items-center">
+<div class="flex flex-col gap-2 items-center w-full">
 	<h2 class="font-bold text-lg text-center">Notes are ready to be printed</h2>
-	<button class="btn btn-primary mt-2 w-full" on:click={()=>isBrrr=true}>Print now! BRRRRRR </button>
+	<button class="btn btn-primary mt-2 w-full" on:click={()=>isBrrr=true}> Print now! BRRRRRRRRRR </button>
 
 	<div class="flex flex-col gap-1 w-full lg:w-1/2">
 		<p class="flex justify-between">

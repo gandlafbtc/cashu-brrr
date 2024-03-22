@@ -32,7 +32,7 @@
 				class="step {step > 3 ? 'step-primary' : ''}"
 			/>
 		</ul>
-		<div class="m-auto">
+		<div class="m-auto w-full">
 			{#if step === 1}
 				<Step1 bind:selectedMint bind:step />
 			{:else if step === 2}
