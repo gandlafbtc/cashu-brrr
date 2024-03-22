@@ -22,7 +22,7 @@
 		const svg64 = btoa(xml); //for utf8: btoa(unescape(encodeURIComponent(xml)))
 		var a = document.createElement('a'); //Create <a>
 		a.href = 'data:image/svg+xml;base64,' + svg64; //Image Base64 Goes here
-		a.download = 'Image.png'; //File name Here
+		a.download = 'Image.svg'; //File name Here
 		a.click(); //Downloaded file
 	};
 </script>
@@ -5107,3 +5107,9 @@ alpha.nutstash.app "
 </svg>
 
 </button>
+<style>
+	@font-face {
+		font-family: 'testfont';
+		src: url('/fonts/super-car.otf');
+	}
+</style>

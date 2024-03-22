@@ -1,4 +1,5 @@
 <script lang="ts">
+    import Note3 from "./Note3.svelte";
 	import Step1 from "./Step1.svelte";
 	import Step2 from "./Step2.svelte";
 	import Step3 from "./Step3.svelte";
