@@ -20,7 +20,7 @@
 
 <div class="flex gap-2 flex-col items-center pt-5">
 	<div class="flex gap-1 badge">
-		<p>connected to</p>
+		<p>Connected to</p>
 		<p>
 			{selectedMint.mintUrl}
 		</p>

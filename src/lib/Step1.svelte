@@ -35,7 +35,7 @@
 </script>
 
 <div class="flex flex-col gap-5 justify-center items-center">
-	<p class="text-center font-bold text-lg">connect to mint</p>
+	<p class="text-center font-bold text-lg">Connect to mint</p>
 	<div class="flex flex-col lg:flex-row gap-2">
 		{#each mints as m}
 			<button
@@ -63,14 +63,14 @@
 		<button
 			on:click={connect}
 			class="btn {isConnecting ? 'btn-disabled' : 'btn-primary'} "
-			>connect</button
+			>Connect</button
 		>
 	</div>
 
 	<div class="h-10">
 		{#if selectedMint}
 		<div class="flex gap-1 badge">
-			<p>connected to</p>
+			<p>Connected to</p>
 			<p>
 				{selectedMint.mintUrl}
 			</p>
