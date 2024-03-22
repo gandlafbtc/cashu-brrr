@@ -1,10 +1,9 @@
 <script lang="ts">
-	import type { Mint } from '../mint';
+	import type { Mint } from "../mint";
 	export let selectedMint: Mint;
-
-	export let selectedDenomination = 1;
+	export let step;
+	export let selectedDenomination;
 	export let selectedNumberOfNotes = 1;
-
 
 	const getDenominations = () => {
 		const denos = Array<number>();
@@ -19,32 +18,53 @@
 	const denomintations = getDenominations();
 </script>
 
-<div class="flex gap-2 flex-col ">
-	<p>
-		Selected Mint: {selectedMint.mintUrl}
-	</p>
-	<h2 class="font-bold text-lg text-center">Choose a denomination for the notes</h2>
-	<div class="max-h-64 overflow-y-scroll">
-		{#each denomintations as deno}
-			<div class="max-w-xs lg:max-w-lg flex">
-				<label class="label cursor-pointer">
-					<input
-						type="radio"
-						name="radio-mint"
-						class="radio checked:bg-primary"
-						bind:group={selectedDenomination}
-						value={deno}
-					/>
-					<span class="pl-2 label-text">{deno} sats</span>
-				</label>
+<div class="flex gap-2 flex-col items-center pt-5">
+	<div class="flex gap-1 badge">
+		<p>connected to</p>
+		<p>
+			{selectedMint.mintUrl}
+		</p>
+	</div>
+	<div class="flex flex-col w-full gap-4">
+		<div class="flex flex-col gap-2">
+			<p class="font-bold">Denomination:</p>
+			<select
+				class="select select-secondary select-bordered w-full"
+				bind:value={selectedDenomination}
+			>
+				<option disabled selected
+					>Choose a denomination for the notes</option
+				>
+				{#each denomintations as deno}
+					<option value={deno}> {deno} sats</option>
+				{/each}
+			</select>
+		</div>
+		<div class="font-bold gap-2 flex flex-col">
+			<p>Number of notes:</p>
+			<input
+				type="range"
+				min="0"
+				max="100"
+				bind:value={selectedNumberOfNotes}
+				class="range range-primary"
+			/>
+			<input
+				type="number"
+				class="input input-primary w-full"
+				bind:value={selectedNumberOfNotes}
+			/>
+		</div>
+	</div>
+	<div class="h-28 flex flex-col justify-end items-center">
+		
+		{#if !isNaN(selectedDenomination * selectedNumberOfNotes)}
+		<p class="pb-5">Total: {selectedDenomination * selectedNumberOfNotes} sats</p>
+		{/if}
+			<div class="flex gap-2">
+				<button class="btn" on:click={()=> step=1}>Back</button>
+				<button class="btn" class:btn-primary={!isNaN(selectedDenomination * selectedNumberOfNotes)}
+				class:btn-disabled={isNaN(selectedDenomination * selectedNumberOfNotes)} on:click={()=>step=3}> confirm </button>
 			</div>
-		{/each}
-	</div>
-	<div class="flex gap-2 items-center">
-		<p>number of notes:</p>
-		<input type="number" class="input input-primary" bind:value={selectedNumberOfNotes} />
-	</div>
-	<div>
-		<p>total: {selectedDenomination*selectedNumberOfNotes}</p>
 	</div>
 </div>

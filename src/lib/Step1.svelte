@@ -1,57 +1,80 @@
 <script lang="ts">
-    import { CashuMint } from "@cashu/cashu-ts";
-    import type { Mint } from "../mint";
+	import { CashuMint } from "@cashu/cashu-ts";
+	import type { Mint } from "../mint";
 
-	export let selectedMint: Mint
+	export let selectedMint: Mint;
+	export let step
 
-	const mints = ['https://mint.minibits.cash/Bitcoin', 'https://8333.space:3338', 'https://stpaulinternet.net/cashu/api/v1/TTcmiEDSWmkefef3XqERKv']
+	const mints = [
+		"https://mint.minibits.cash/Bitcoin",
+		"https://8333.space:3338",
+		"https://stpaulinternet.net/cashu/api/v1/TTcmiEDSWmkefef3XqERKv",
+	];
 
-	let mintUrl = ''
-	let isConnecting = false
+	let mintUrl = "";
+	let isConnecting = false;
 	const connect = async () => {
 		try {
-			isConnecting = true
-			const mint = new CashuMint(mintUrl)
-			const keys = await mint.getKeys()
+			isConnecting = true;
+			const mint = new CashuMint(mintUrl);
+			const keys = await mint.getKeys();
 			if (!keys) {
-				return
-			}
-			else {
+				return;
+			} else {
 				selectedMint = {
 					keys,
-					mintUrl
-				}
+					mintUrl,
+				};
+				step = 2
 			}
 		} catch (error) {
-			
+		} finally {
+			isConnecting = false;
 		}
-		finally {
-			isConnecting = false
-		}
-
-	}
+	};
 </script>
 
-<p class="text-center font-bold text-lg">connect to mint</p>
+<div class="flex flex-col gap-5 justify-center items-center">
+	<p class="text-center font-bold text-lg">connect to mint</p>
+	<div class="flex flex-col lg:flex-row gap-2">
+		{#each mints as m}
+			<button
+				class="btn btn-xs rounded-full btn-secondary"
+				on:click={() => (mintUrl = m)}
+			>
+				{m}
+			</button>
+		{/each}
+	</div>
+	<div
+		class="border-dashed border-spacing-2 border-base-100 border-2 flex gap-2 justify-center p-5"
+	>
+		<input
+			placeholder="type mint url here..."
+			type="text"
+			bind:value={mintUrl}
+			class="input input-primary"
+			on:keypress={(e)=> {
+				if (e.key==='Enter') {
+					connect()					
+				}
+			}}
+		/>
+		<button
+			on:click={connect}
+			class="btn {isConnecting ? 'btn-disabled' : 'btn-primary'} "
+			>connect</button
+		>
+	</div>
 
-<div class="flex flex-col lg:flex-row gap-2">
-
-	{#each mints as m}
-	<button class="btn btn-xs rounded-full btn-secondary" on:click={()=> mintUrl=m}>
-		{m}
-	</button>
-	{/each}
+	<div class="h-10">
+		{#if selectedMint}
+		<div class="flex gap-1 badge">
+			<p>connected to</p>
+			<p>
+				{selectedMint.mintUrl}
+			</p>
+		</div>
+		{/if}
+	</div>
 </div>
-<div class="border-dashed border-spacing-2 border-base-100 border-2 flex gap-2 justify-center p-5">
-	<input placeholder="type mint url here..." type="text" bind:value={mintUrl} class="input input-primary">
-	<button on:click={connect} class="btn {isConnecting?'btn-disabled':'btn-primary'} ">connect</button>
-</div>
-
-{#if selectedMint}
-	 <p>
-		connected to
-	 </p>
-	 <p>
-		{selectedMint.mintUrl}
-	 </p>
-{/if}
