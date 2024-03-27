@@ -6,9 +6,7 @@
 	export let step
 
 	const mints = [
-		"https://mint.minibits.cash/Bitcoin",
-		"https://8333.space:3338",
-		"https://stpaulinternet.net/cashu/api/v1/TTcmiEDSWmkefef3XqERKv",
+		"http://ksgckoebikx53v4iarh5aops3i7arjwznmlin2j2pc7rpdgbfyeo2kyd.onion/cashu/api/v1/6fXyfLYrpnVgdycQ8qS2rX",
 	];
 
 	let mintUrl = "";
