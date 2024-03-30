@@ -170,7 +170,7 @@
 			{:else if noteType === 'bobstash'}
 			<Note4
 			denomination={token.token[0].proofs[0].amount}
-			mintUrl={token.token[0].mint}
+			mintUrl={selectedMint.mintUrl}
 			token={getEncodedToken(token)}
 		/>
 			{:else}
