@@ -9,6 +9,7 @@
 	import Note2 from "./Note2.svelte";
 	import type { Mint } from "../mint";
 	import Note3 from "./Note3.svelte";
+    import Note4 from "./Note4.svelte";
 
 	export let selectedMint: Mint;
 	export let step;
@@ -63,6 +64,26 @@
 					/>
 				</div>
 			</div>
+			<div class="flex gap-2 items-center w-full justify-between">
+
+			<div class="flex gap-1 w-full ">
+				<input
+					class="radio radio-primary"
+					type="radio"
+					name="scoops"
+					value="bobstash"
+					bind:group={noteType}
+				/>
+				<p>Bo₿stash</p>
+			</div>
+			<div class="h-12 w-44">
+				<img
+					src="/bobstash.png"
+					alt=""
+					class="h-12 w-44"
+				/>
+			</div>
+		</div>
 		</div>
 		<h2 class="font-bold text-lg text-center">
 			Notes are ready to be printed
@@ -146,6 +167,12 @@
 					mintUrl={token.token[0].mint}
 					token={getEncodedToken(token)}
 				/>
+			{:else if noteType === 'bobstash'}
+			<Note4
+			denomination={token.token[0].proofs[0].amount}
+			mintUrl={selectedMint.mintUrl}
+			token={getEncodedToken(token)}
+		/>
 			{:else}
 				<Note3
 					denomination={token.token[0].proofs[0].amount}
