@@ -16,7 +16,7 @@
 </script>
 
 <div class="h-screen w-screen bg-gradient-to-br from-primary to-secondary items-center flex justify-center">
-	<div class="flex m-2 gap-2 flex-col items-center  bg-base-100 w-full {step===4&&isBrrr?'h-full max-w-full':'h-[40rem] max-w-5xl'} p-5 rounded-lg shadow-md">
+	<div class="flex m-2 gap-2 flex-col items-center  bg-base-100 w-full {step===4&&isBrrr?'h-full max-w-full':'max-w-5xl'} p-5 rounded-lg shadow-md">
 		<h1 class="w-full text-center font-bold text-2xl">Money printer go brrrrr</h1>
 		<ul class="steps">
 			<li data-content="🏦" class="step step-primary" />

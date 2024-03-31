@@ -10,22 +10,45 @@
 	import type { Mint } from "../mint";
 	import Note3 from "./Note3.svelte";
 	import Note4 from "./Note4.svelte";
-    import Note5 from "./Note5.svelte";
+	import Note5 from "./Note5.svelte";
+	import CustomNote from "./CustomNote.svelte";
 
-	export let selectedMint: Mint;
+	export let selectedMint: Mint = { keys: [], mintUrl: "blabla" };
 	export let step;
-	export let selectedDenomination: number;
-	export let selectedNumberOfNotes: number;
-	export let tokens: Token[];
+	export let selectedDenomination: number = 1;
+	export let selectedNumberOfNotes: number = 1;
+	export let tokens: Token[] = [];
 
 	export let isBrrr = false;
 
+	let cornerInput: HTMLInputElement;
+	let brandInput: HTMLInputElement;
+	let brandImage: HTMLImageElement;
+	let cornerImage: HTMLImageElement;
+
 	let noteType = "nutstash";
+
+	//custom note
+	let colorCode = "#5db075";
+	let brandLogoURL = "";
+	let cornerBrandLogoURL = "";
+
+	const getBrandURL = (e) => {
+		brandLogoURL = URL.createObjectURL(e.target.files[0]);
+	};
+	
+	const getCornerURL = (e) => {
+		cornerBrandLogoURL = URL.createObjectURL(e.target.files[0]);
+	};
 </script>
 
 {#if !isBrrr}
 	<div class="flex flex-col gap-2 items-center w-full">
-		<p class="font-bold">Select a theme</p>
+		<div role="tablist" class="tabs tabs-boxed">
+			<button role="tab" class="tab {noteType!=='custom'?'tab-active':''}" on:click={()=> noteType='nutstash'}>Select Theme</button>
+			<button role="tab" class="tab {noteType==='custom'?'tab-active':''}" on:click={()=> noteType='custom'}>Custom</button>
+		</div>
+		{#if noteType !== "custom"}
 		<div class="flex flex-col gap-2">
 			<div class="flex gap-2 items-center justify-between w-80">
 				<div class="flex gap-1 w-full">
@@ -40,21 +63,6 @@
 				</div>
 				<div class="h-12 w-44">
 					<img src="/ns.png" alt="" class="h-12 w-44" />
-				</div>
-			</div>
-			<div class="flex gap-2 items-center w-full justify-between">
-				<div class="flex gap-1">
-					<input
-						class="radio radio-primary"
-						type="radio"
-						name="scoops"
-						value="basic"
-						bind:group={noteType}
-					/>
-					<p>Basic</p>
-				</div>
-				<div class="h-12">
-					<img src="/basic.png" alt="" class="h-12" />
 				</div>
 			</div>
 			<div class="flex gap-2 items-center w-full justify-between">
@@ -88,6 +96,38 @@
 				</div>
 			</div>
 		</div>
+		{:else}
+		<div class="flex flex-col gap-2">
+					<div class="flex gap-2 flex-col">
+						Select Color: <input
+							type="color"
+							bind:value={colorCode}
+						/>
+						Brand Image:
+						<input
+							type="file"
+							accept="image/*"
+							on:input={getBrandURL}
+							bind:this={brandInput}
+						/>
+						Corner Image:
+						<input
+							type="file"
+							accept="image/*"
+							on:input={getCornerURL}
+							bind:this={cornerInput}
+						/>
+					</div>
+					<CustomNote
+						{brandLogoURL}
+						{colorCode}
+						{cornerBrandLogoURL}
+						denomination={selectedDenomination}
+						mintUrl={selectedMint.mintUrl}
+						token={"blabla"}
+					/>
+				</div>
+		{/if}
 		<h2 class="font-bold text-lg text-center">
 			Notes are ready to be printed
 		</h2>
@@ -178,6 +218,15 @@
 				/>
 			{:else if noteType === "cashu"}
 				<Note5
+					denomination={token.token[0].proofs[0].amount}
+					mintUrl={selectedMint.mintUrl}
+					token={getEncodedToken(token)}
+				/>
+			{:else if noteType === "custom"}
+				<CustomNote
+					{brandLogoURL}
+					{colorCode}
+					{cornerBrandLogoURL}
 					denomination={token.token[0].proofs[0].amount}
 					mintUrl={selectedMint.mintUrl}
 					token={getEncodedToken(token)}
