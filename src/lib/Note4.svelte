@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { QRCodeImage } from 'svelte-qrcode-image';
+	import { QRCodeImage } from 'svelte-qrcode-image';  
+   import { secp256k1 } from "@noble/curves/secp256k1";
+   import { bytesToHex } from '@noble/curves/abstract/utils';
 
 	export let denomination: number;
 	export let mintUrl: string;
@@ -9,13 +11,11 @@
 	$: imageURL = '';
 	$: mintImageURL = '';
 
-	let mintUrlChunks = Array<string>();
-
-	mintUrlChunks = mintUrl.match(/(.{1,20})/g) ?? [];
+   const randomID = bytesToHex(secp256k1.utils.randomPrivateKey()).slice(0,12)
 
 	onMount(() => {
-			imageURL = document.getElementById('qr-' + token).toDataURL();
-			mintImageURL = document.getElementById('qr-mint-' + token).toDataURL();
+			imageURL = document.getElementById('qr-' + randomID).toDataURL();
+			mintImageURL = document.getElementById('qr-mint-' + randomID).toDataURL();
 	});
 
 	const downloadNote = async (e) => {
@@ -30,8 +30,8 @@
 </script>
 
 <div class="invisible h-0">
-	<QRCodeImage text={token} scale={9} displayType="canvas" displayID="qr-{token}" />
-	<QRCodeImage text={mintUrl} scale={9} displayType="canvas" displayID="qr-mint-{token}" />
+	<QRCodeImage text={token} scale={9} displayType="canvas" displayID="qr-{randomID}" />
+	<QRCodeImage text={mintUrl} scale={9} displayType="canvas" displayID="qr-mint-{randomID}" />
 </div>
 <svg width="532" height="276" viewBox="0 0 532 276" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
    <rect x="5" y="5" width="522" height="266" fill="white" stroke="#FF9500" stroke-width="10" stroke-linejoin="bevel"/>
@@ -416,15 +416,7 @@
    <rect x="400" y="153" width="80" height="80" fill="url(#pattern0)"/>
     <text fill="black" xml:space="preserve" style="white-space: pre" font-family="Fira Code" font-size="22" font-weight="bold" letter-spacing="0em"><tspan x="55" y="64.848">{denomination}</tspan></text>
    <rect x="176" y="48" width="180" height="180" fill="url(#pattern1)"/>
-   <defs>
-   <pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
-   <use xlink:href="#image0_3_267" transform="scale(0.002)"/>
-   </pattern>
-   <pattern id="pattern1" patternContentUnits="objectBoundingBox" width="1" height="1">
-   <use xlink:href="#image1_3_267" transform="scale(0.00308642)"/>
-</pattern>
-   <image id="image0_3_267" width="462" height="506" xlink:href="{mintImageURL}"/>
-   <image id="image1_3_267" width="324" height="324" xlink:href="{imageURL}"/>
-   </defs>
+   <image  x="398" y="152" id="image1_20_552" width="84" xlink:href="{mintImageURL}" />
+   <image  x="178" y="50" id="image0_20_552" width="180" xlink:href="{imageURL}"/>
    </svg>
    

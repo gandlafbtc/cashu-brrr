@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { QRCodeImage } from 'svelte-qrcode-image';
+   import { secp256k1 } from "@noble/curves/secp256k1";
+   import { bytesToHex } from '@noble/curves/abstract/utils';
 
 	export let denomination: number;
 	export let mintUrl: string;
@@ -12,9 +14,11 @@
 	$: imageURL = '';
 	$: mintImageURL = '';
 
+   const randomID = bytesToHex(secp256k1.utils.randomPrivateKey()).slice(0,12)
+
 	onMount(() => {
-			imageURL = document.getElementById('qr-' + token).toDataURL();
-			mintImageURL = document.getElementById('qr-mint-' + token).toDataURL();
+			imageURL = document.getElementById('qr-' + randomID).toDataURL();
+			mintImageURL = document.getElementById('qr-mint-' + randomID).toDataURL();
 	});
 
 	const downloadNote = async (e) => {
@@ -29,8 +33,8 @@
 </script>
 
 <div class="invisible h-0">
-	<QRCodeImage text={token} scale={9} displayType="canvas" displayID="qr-{token}" />
-	<QRCodeImage text={mintUrl} scale={9} displayType="canvas" displayID="qr-mint-{token}" />
+	<QRCodeImage text={token} scale={9} displayType="canvas" displayID="qr-{randomID}" />
+	<QRCodeImage text={mintUrl} scale={9} displayType="canvas" displayID="qr-mint-{randomID}" />
 </div>
 <button on:click={downloadNote}>
 <svg width="534" height="279" viewBox="0 0 534 279" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -300,13 +304,9 @@
    <rect x="523" y="37" width="26" height="26" transform="rotate(-180 523 37)" fill="url(#pattern3)"/>
    <rect x="43" y="141" width="97" height="97" fill="url(#pattern4)"/>
    <rect x="394" y="31" width="97" height="97" fill="url(#pattern5)"/>
+   <image  x="398" y="152" id="image1_20_552" width="84" xlink:href="{mintImageURL}" />
+   <image  x="178" y="50" id="image0_20_552" width="180" xlink:href="{imageURL}"/>
    <defs>
-   <pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
-   <use xlink:href="#image0_22_619" transform="scale(0.00308642)"/>
-   </pattern>
-   <pattern id="pattern1" patternContentUnits="objectBoundingBox" width="1" height="1">
-   <use xlink:href="#image1_22_619" transform="scale(0.00362319)"/>
-   </pattern>
    <pattern id="pattern2" patternContentUnits="objectBoundingBox" width="1" height="1">
    <use xlink:href="#image2_22_619" transform="scale(0.0119048)"/>
    </pattern>
@@ -319,8 +319,6 @@
    <pattern id="pattern5" patternContentUnits="objectBoundingBox" width="1" height="1">
    <use xlink:href="#image3_22_619" transform="scale(0.00290698)"/>
    </pattern>
-   <image id="image0_22_619" width="324" height="324" xlink:href="{imageURL}"/>
-   <image id="image1_22_619" width="276" height="276" xlink:href="{mintImageURL}"/>
    <image id="image2_22_619" width="84" height="84" xlink:href="{cornerBrandLogoURL}"/>
    <image id="image3_22_619" width="344" height="344" xlink:href="{brandLogoURL}"/>
    </defs>

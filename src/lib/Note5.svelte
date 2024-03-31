@@ -1,21 +1,23 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { QRCodeImage } from 'svelte-qrcode-image';
+   import { secp256k1 } from "@noble/curves/secp256k1";
+   import { bytesToHex } from '@noble/curves/abstract/utils';
 
+    import { getDecodedToken } from '@cashu/cashu-ts';
 	export let denomination: number;
 	export let mintUrl: string;
 	export let token: string;
-
+   
 	$: imageURL = '';
 	$: mintImageURL = '';
-
-	let mintUrlChunks = Array<string>();
-
-	mintUrlChunks = mintUrl.match(/(.{1,20})/g) ?? [];
+   
+   
+   const randomID = bytesToHex(secp256k1.utils.randomPrivateKey()).slice(0,12)
 
 	onMount(() => {
-			imageURL = document.getElementById('qr-' + token).toDataURL();
-			mintImageURL = document.getElementById('qr-mint-' + token).toDataURL();
+			imageURL = document.getElementById('qr-' + randomID).toDataURL();
+			mintImageURL = document.getElementById('qr-mint-' + randomID).toDataURL();
 	});
 
 	const downloadNote = async (e) => {
@@ -30,8 +32,8 @@
 </script>
 
 <div class="invisible h-0">
-	<QRCodeImage text={token} scale={9} displayType="canvas" displayID="qr-{token}" />
-	<QRCodeImage text={mintUrl} scale={9} displayType="canvas" displayID="qr-mint-{token}" />
+	<QRCodeImage text={token} scale={9} displayType="canvas" displayID="qr-{randomID}" />
+	<QRCodeImage text={mintUrl} scale={9} displayType="canvas" displayID="qr-mint-{randomID}" />
 </div>
 <svg width="534" height="279" viewBox="0 0 534 279" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
    <rect x="5" y="5" width="522" height="266" fill="white" stroke="#7E3BC9" stroke-width="10" stroke-linejoin="bevel"/>
@@ -346,21 +348,15 @@
    <path d="M429.089 67.1985C429.627 66.6611 430.256 66.3005 430.977 66.1166C431.684 65.9469 432.392 65.9469 433.099 66.1166C433.82 66.3005 434.449 66.6611 434.987 67.1985L436.153 68.3652L433.353 71.1653L432.314 70.1259C432.243 70.0552 432.158 70.0128 432.059 69.9986C431.96 70.0128 431.875 70.0552 431.805 70.1259L422.662 79.2688C422.591 79.3395 422.556 79.4173 422.556 79.5021C422.556 79.6153 422.591 79.7072 422.662 79.7779L425.568 82.6841C425.639 82.7548 425.724 82.7831 425.823 82.769C425.907 82.769 425.985 82.7336 426.056 82.6629L435.305 73.4139C435.842 72.8765 436.472 72.5159 437.193 72.3321C437.9 72.1624 438.607 72.1624 439.314 72.3321C440.035 72.5159 440.672 72.8836 441.223 73.4352L444.363 76.5747C444.9 77.1121 445.254 77.7344 445.424 78.4415C445.607 79.1627 445.614 79.8769 445.445 80.584C445.261 81.3053 444.9 81.9346 444.363 82.472L434.987 91.8482C434.449 92.3856 433.827 92.7392 433.12 92.9089C432.399 93.0927 431.677 93.0927 430.956 92.9089C430.249 92.7392 429.627 92.3856 429.089 91.8482L427.923 90.6815L430.744 87.8601L431.783 88.8996C431.854 88.9703 431.939 88.9986 432.038 88.9844C432.137 88.9986 432.222 88.9703 432.293 88.8996L441.435 79.7567C441.506 79.686 441.541 79.5941 441.541 79.4809C441.541 79.3961 441.506 79.3183 441.435 79.2476L438.529 76.3414C438.459 76.2707 438.381 76.2353 438.296 76.2353C438.197 76.2494 438.112 76.2919 438.041 76.3626L428.771 85.6328C428.234 86.1702 427.611 86.5237 426.904 86.6934C426.183 86.8773 425.462 86.8773 424.741 86.6934C424.034 86.5237 423.404 86.1631 422.853 85.6115L419.713 82.472C419.176 81.9346 418.815 81.3053 418.631 80.584C418.462 79.8769 418.469 79.1627 418.652 78.4415C418.822 77.7344 419.176 77.1121 419.713 76.5747L429.089 67.1985Z" fill="#7E3BC9" fill-opacity="0.3"/>
    <path d="M414.427 81.8604L429.701 97.134L426.901 99.9341L420.685 93.7186L410.673 103.731L416.888 109.947L414.088 112.747L398.814 97.4734L401.615 94.6732L407.83 100.889L417.843 90.8761L411.627 84.6606L414.427 81.8604Z" fill="#7E3BC9" fill-opacity="0.3"/>
    <path d="M393.499 102.789C394.036 102.252 394.665 101.891 395.387 101.707C396.094 101.538 396.801 101.538 397.508 101.707C398.229 101.891 398.859 102.252 399.396 102.789L411.721 115.114L408.921 117.914L396.723 105.717C396.652 105.646 396.568 105.603 396.469 105.589C396.37 105.603 396.285 105.646 396.214 105.717L387.092 114.838C387.022 114.909 386.979 114.994 386.965 115.093C386.965 115.206 387 115.298 387.071 115.369L399.269 127.566L396.447 130.387L384.122 118.063C383.585 117.525 383.224 116.896 383.041 116.175C382.871 115.468 382.878 114.753 383.062 114.032C383.232 113.325 383.585 112.703 384.122 112.165L393.499 102.789Z" fill="#7E3BC9" fill-opacity="0.3"/>
+   <image  x="398" y="152" id="image1_20_552" width="84" xlink:href="{mintImageURL}" />
+   <image  x="178" y="50" id="image0_20_552" width="180" xlink:href="{imageURL}"/>
    <defs>
-   <pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
-   <use xlink:href="#image0_20_552" transform="scale(0.00308642)"/>
-   </pattern>
-   <pattern id="pattern1" patternContentUnits="objectBoundingBox" width="1" height="1">
-   <use xlink:href="#image1_20_552" transform="scale(0.00308642)"/>
-   </pattern>
    <clipPath id="clip0_20_552">
    <rect width="20.2941" height="23" fill="white" transform="translate(500.706 12)"/>
    </clipPath>
    <clipPath id="clip1_20_552">
    <rect width="20.2941" height="23" fill="white" transform="matrix(-1 0 0 -1 32 268)"/>
    </clipPath>
-   <image id="image0_20_552" width="324" height="324" xlink:href="{imageURL}"/>
-   <image id="image1_20_552" width="324" height="324" xlink:href="{mintImageURL}"/>
    </defs>
    </svg>
    
