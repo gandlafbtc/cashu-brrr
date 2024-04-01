@@ -1,9 +1,14 @@
 <script lang="ts">
 	import { CashuMint } from "@cashu/cashu-ts";
 	import type { Mint } from "../mint";
+    import { prints, type Print } from "./stores";
+    import NotesCalc from "./comp/NotesCalc.svelte";
 
 	export let selectedMint: Mint;
 	export let step
+	export let tokens = []
+	export let selectedDenomination = 0
+	export let selectedNumberOfNotes = 0
 
 	const mints = [
 		"https://mint.minibits.cash/Bitcoin",
@@ -32,6 +37,14 @@
 			isConnecting = false;
 		}
 	};
+
+	const reprint = (print: Print) => {
+		tokens = print.tokens
+		selectedDenomination = print.tokens[0].token[0].proofs[0].amount
+		selectedNumberOfNotes = print.tokens.length
+		selectedMint = {mintUrl: print.mint, keys: []}
+		step =4
+	}
 </script>
 
 <div class="flex flex-col gap-5 justify-center items-center">
@@ -77,4 +90,25 @@
 		</div>
 		{/if}
 	</div>
+
+	{#if $prints.length}
+	<div class="divider">
+		or
+	</div>
+		<p class="font-bold">
+			Re-print previous print
+		</p>
+		{#each $prints as print}
+			 <div class="flex gap-2 flex-col bg-base-300 rounded-lg p-2 w-80">
+				<button class="btn btn-secondary btn-sm" on:click={()=>reprint(print)}>Print</button>
+				<NotesCalc selectedDenomination={print.tokens[0].token[0].proofs[0].amount} selectedNumberOfNotes={print.tokens.length}></NotesCalc>
+				<p class="break-all">
+					{print.mint}
+				</p>
+				<p class="text-sm text-neutral">
+					{new Date(print.ts).toLocaleString()}
+				</p>
+			 </div>
+		{/each}
+	{/if}
 </div>

@@ -35,7 +35,7 @@
 		</ul>
 		<div class="m-auto w-full">
 			{#if step === 1}
-				<Step1 bind:selectedMint bind:step />
+				<Step1 bind:selectedMint bind:step bind:tokens bind:selectedNumberOfNotes bind:selectedDenomination />
 			{:else if step === 2}
 				<Step2
 					bind:step

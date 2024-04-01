@@ -3,6 +3,7 @@
     import type { Mint } from "../mint";
     import { onDestroy, onMount } from "svelte";
     import { QRCodeImage } from "svelte-qrcode-image";
+    import { prints } from "./stores";
 
     export let selectedMint: Mint;
     export let step
@@ -38,6 +39,7 @@
                     token: [{ mint: selectedMint.mintUrl, proofs: [proof] }],
                 });
             }
+            prints.update(ctx => [...ctx, {tokens, mint: selectedMint.mintUrl, ts: Date.now()}])
             if (tokens.length) {
                 isPaid = true;
                 setTimeout(()=> {
