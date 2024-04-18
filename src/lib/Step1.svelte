@@ -98,8 +98,11 @@
 		<p class="font-bold">
 			Re-print previous print
 		</p>
-		{#each $prints as print}
-			 <div class="flex gap-2 flex-col bg-base-300 rounded-lg p-2 w-80">
+		<div class="h-fit">
+
+			<div class="h-full max-h-52 lg:max-h-96 flex flex-col gap-3 overflow-x-scroll">
+				{#each $prints as print}
+				<div class="flex gap-2 flex-col bg-base-300 rounded-lg p-2 w-80">
 				<button class="btn btn-secondary btn-sm" on:click={()=>reprint(print)}>Print</button>
 				<NotesCalc selectedDenomination={print.tokens[0].token[0].proofs[0].amount} selectedNumberOfNotes={print.tokens.length}></NotesCalc>
 				<p class="break-all">
@@ -108,7 +111,9 @@
 				<p class="text-sm text-neutral">
 					{new Date(print.ts).toLocaleString()}
 				</p>
-			 </div>
-		{/each}
+			</div>
+			{/each}
+		</div>
+		</div>
 	{/if}
 </div>

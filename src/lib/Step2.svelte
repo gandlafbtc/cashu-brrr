@@ -45,8 +45,8 @@
 			<p>Number of notes:</p>
 			<input
 				type="range"
-				min="0"
-				max="100"
+				min=1
+				max=100
 				bind:value={selectedNumberOfNotes}
 				class="range range-primary"
 			/>

@@ -8,15 +8,14 @@
 	let step = 1;
 
 	let selectedMint;
-	let selectedDenomination: number;
-	let selectedNumberOfNotes: number;
+	let selectedDenomination: number = 1;
+	let selectedNumberOfNotes: number = 1;
 	let tokens = [];
 	let isPaid;
 	let isBrrr
 </script>
-
-<div class="h-screen w-screen bg-gradient-to-br from-primary to-secondary items-center flex justify-center">
-	<div class="flex m-2 gap-2 flex-col items-center  bg-base-100 w-full {step===4&&isBrrr?'h-full max-w-full':'max-w-5xl'} p-5 rounded-lg shadow-md">
+<div class="h-screen w-screen bg-gradient-to-br from-primary to-secondary items-center flex justify-center flex-col p-2">
+	<div class="flex m-3 mb-3 gap-2 flex-col items-center  bg-base-100 w-full h-full p-5 rounded-lg shadow-md">
 		<h1 class="w-full text-center font-bold text-2xl">Money printer go brrrrr</h1>
 		<ul class="steps">
 			<li data-content="🏦" class="step step-primary" />
