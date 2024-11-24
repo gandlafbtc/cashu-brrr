@@ -56,7 +56,7 @@
         {brandLogoURL}
         {colorCode}
         {cornerBrandLogoURL}
-        denomination={$selectedDenomination}
+        denomination={getAmountForTokenSet($preparedTokens[0]?.proofs??[])}
         mintUrl={$wallet?.mint.mintUrl}
         token={"blabla"}
         unit={$preparedTokens[0]?.unit??'sat'}
