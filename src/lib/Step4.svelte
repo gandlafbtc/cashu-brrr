@@ -59,7 +59,7 @@
         denomination={$selectedDenomination}
         mintUrl={$wallet?.mint.mintUrl}
         token={"blabla"}
-        unit={$wallet?.unit}
+        unit={$preparedTokens[0]?.unit??'sat'}
       />
     </div>
 
