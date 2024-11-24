@@ -1,27 +1,27 @@
 <script lang="ts">
-    import { mint, wallet } from "../stores.svelte";
+  import { mint } from "../stores.svelte";
 
-    let {unit=$bindable()} = $props()
+  let { unit = $bindable() } = $props();
 
-    const getUnits = () => {
-        if (!$mint) {
-            return ['sat']
-        }
-        return $mint.keysets.keysets.reduce((acc, curr) => {
-            if (acc.includes(curr.unit)) {
-                return acc;
-            } else {
-                acc.push(curr.unit);
-            }
-            return acc;
-        }, [] as string[]);
-    };
+  const getUnits = () => {
+    if (!$mint) {
+      return ["sat"];
+    }
+    return $mint.keysets.keysets.reduce((acc, curr) => {
+      if (acc.includes(curr.unit)) {
+        return acc;
+      } else {
+        acc.push(curr.unit);
+      }
+      return acc;
+    }, [] as string[]);
+  };
 
-    let units = $derived(getUnits());
+  let units = $derived(getUnits());
 </script>
 
 <select class="select select-bordered w-full" bind:value={unit}>
-    {#each units as unit}
-        <option value={unit}>{unit}</option>
-    {/each}
+  {#each units as unit}
+    <option value={unit}>{unit}</option>
+  {/each}
 </select>
