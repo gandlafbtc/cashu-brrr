@@ -1,78 +1,175 @@
 <script lang="ts">
-    import { CashuMint, CashuWallet, type Token } from "@cashu/cashu-ts";
-    import type { Mint } from "../mint";
-    import { onDestroy, onMount } from "svelte";
-    import { QRCodeImage } from "svelte-qrcode-image";
-    import { prints } from "./stores";
+  import { getDecodedToken, type Proof, type Token } from "@cashu/cashu-ts";
+  import {
+    preparedTokens,
+    prints,
+    proofs,
+    selectedDenomination,
+    selectedNumberOfNotes,
+    step,
+    wallet,
+    type Print,
+  } from "./stores.svelte";
+  import LnInvoice from "./comp/LNInvoice.svelte";
+  import {
+    createOutputAmount,
+    createOutputAmounts,
+    formatAmount,
+    getAmountForTokenSet,
+  } from "./utils";
+  import { toast } from "svelte-sonner";
 
-    export let selectedMint: Mint;
-    export let step
-    export let selectedDenomination;
-    export let selectedNumberOfNotes;
-    export let tokens: Token[] = [];
-    export let isPaid = false;
+  interface Props {
+    isPaid?: boolean;
+  }
 
-    let isAborted = false
+  let inputToken = $state("");
 
-    const mint = new CashuMint(selectedMint.mintUrl);
-    const wallet = new CashuWallet(mint, selectedMint.keys);
-    const amount = selectedDenomination * selectedNumberOfNotes;
-    let invoice;
-    let h;
-    let fee;
+  let isLoading = $state(false);
 
-    onMount(async () => {
-        const { hash, pr, error } = await wallet.requestMint(amount);
-        invoice = pr;
-        h = hash;
-        fee = await wallet.getFee(invoice);
-        checkPaid();
-    });
-    onDestroy(()=> {isAborted=true})
-    const checkPaid = async () => {
-        try {
-            const { proofs } = await wallet.requestTokens(amount, h, [
-                { amount: selectedDenomination, count: selectedNumberOfNotes },
-            ]);
-            for (const proof of proofs) {
-                tokens.push({
-                    token: [{ mint: selectedMint.mintUrl, proofs: [proof] }],
-                });
-            }
-            prints.update(ctx => [...ctx, {tokens, mint: selectedMint.mintUrl, ts: Date.now()}])
-            if (tokens.length) {
-                isPaid = true;
-                setTimeout(()=> {
-                    step=4
-                },1000)
-            }
-        } catch (error) {
-        } finally {
-            if (isAborted) {
-                return
-            }
-            if (!isPaid) {
-                setTimeout(checkPaid, 5000);
-            }
-        }
+  let tab = $state("ecash");
+
+  const validate = async () => {
+    try {
+      isLoading = true;
+      const outputAmounts = await createOutputAmounts(
+        $selectedDenomination,
+        $selectedNumberOfNotes,
+      );
+      console.log(outputAmounts);
+      if (!inputToken.startsWith("cashu")) {
+        throw new Error("Not a cashu token");
+      }
+      const token = getDecodedToken(inputToken);
+      if (token.mint !== $wallet.mint.mintUrl) {
+        throw new Error(
+          `Mint mismatch: needed ${$wallet.mint.mintUrl}, received ${token.mint}`,
+        );
+      }
+      if (token.unit !== $wallet.unit) {
+        throw new Error(
+          `Unit mismatch: Needed ${$wallet.unit}, Received ${token.unit}`,
+        );
+      }
+      if (
+        getAmountForTokenSet(token.proofs) !==
+        $selectedDenomination * $selectedNumberOfNotes
+      ) {
+        throw new Error(
+          `Amount mismatch: Needed ${$selectedDenomination * $selectedNumberOfNotes}, Received ${getAmountForTokenSet(token.proofs)}`,
+        );
+      }
+      toast.promise($wallet.receive(token, { outputAmounts }), {
+        loading: "Received! Creating new cashu tokens...",
+        success: (data) => {
+          handleProofs(data);
+          step.set(4);
+          return "Tokens created!";
+        },
+        error: (e) => {
+          console.error(e);
+          return e.message;
+        },
+      });
+    } catch (error) {
+      toast.error(error.message);
+      console.error(error);
+    } finally {
+      isLoading = false;
+      inputToken = "";
+    }
+  };
+
+  const handleProofs = async (ps: Proof[]) => {
+    proofs.update((ctx) => [...ps, ...ctx]);
+    const tokens: Token[] = await createTokensForPrint(
+      ps,
+      $wallet.mint.mintUrl,
+      $wallet.unit,
+      $selectedNumberOfNotes,
+    );
+    const print: Print = {
+      tokens,
+      mint: $wallet.mint.mintUrl,
+      ts: Date.now(),
     };
+    prints.update((ctx) => [print, ...ctx]);
+    preparedTokens.set(tokens);
+  };
+
+  const createTokensForPrint = async (
+    proofs: Proof[],
+    mint: string,
+    unit: string,
+    n: number,
+  ) => {
+    const tokens: Token[] = [];
+    const ps = [...proofs];
+    const outputAmount = await createOutputAmount($selectedDenomination);
+
+    while (ps.length) {
+      const token: Token = {
+        mint,
+        unit,
+        proofs: [],
+      };
+      for (const amount of outputAmount) {
+        const proof = ps.splice(
+          ps.findIndex((p) => p.amount === amount),
+          1,
+        );
+        token.proofs.push(...proof);
+      }
+      tokens.push(token);
+    }
+    return tokens;
+  };
 </script>
 
 <div class="flex flex-col justify-center gap-2 items-center">
-    {#if invoice}
-        {#if isPaid}
-        <p class="flex items-center gap-2 text-success">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-              </svg>
-            Invoice has been paid 
-        </p>
-        {:else}
-            <a href={"lightning:" + invoice}><QRCodeImage text={invoice} /> </a>
-            <input readonly class="input input-primary" value={invoice} />
-            <button on:click={()=>step=2} class='btn'>Back</button>
-        {/if}
+  <div role="tablist" class="tabs tabs-boxed">
+    <button
+      role="tab"
+      class="tab"
+      class:tab-active={tab === "ecash"}
+      onclick={() => {
+        tab = "ecash";
+      }}>Ecash</button
+    >
+    <button
+      role="tab"
+      class="tab"
+      class:tab-active={tab === "ln"}
+      onclick={() => {
+        tab = "ln";
+      }}>Lightning</button
+    >
+  </div>
+  <div class="flex flex-col items-center justify-center gap-2 h-96">
+    {#if tab === "ln"}
+      <div>
+        <LnInvoice></LnInvoice>
+      </div>
     {:else}
-        <span class="loading loading-dots loading-md" />
+      Paste
+      <p class="badge badge-warning">
+        {formatAmount(
+          $selectedDenomination * $selectedNumberOfNotes,
+          $wallet.unit,
+        )} token
+      </p>
+      <p>From</p>
+      <p class="badge badge-info">
+        {$wallet?.mint.mintUrl}
+      </p>
+
+      <input
+        class="input input-primary"
+        placeholder="cashuB...."
+        bind:value={inputToken}
+        onpaste={validate}
+        disabled={isLoading}
+      />
     {/if}
+  </div>
 </div>
