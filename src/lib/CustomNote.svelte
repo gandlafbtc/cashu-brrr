@@ -3,16 +3,32 @@
 	import { QRCodeImage } from 'svelte-qrcode-image';
    import { secp256k1 } from "@noble/curves/secp256k1";
    import { bytesToHex } from '@noble/curves/abstract/utils';
+    import { formatAmount } from './utils';
 
-	export let denomination: number;
-	export let mintUrl: string;
-	export let token: string;
-   export let colorCode: string
-   export let cornerBrandLogoURL: string
-   export let brandLogoURL: string
+   interface Props {
+      denomination: number;
+      mintUrl: string;
+      token: string;
+      colorCode: string;
+      cornerBrandLogoURL: string;
+      brandLogoURL: string;
+      unit: string
+   }
 
-	$: imageURL = '';
-	$: mintImageURL = '';
+   let {
+      denomination,
+      mintUrl,
+      token,
+      colorCode,
+      cornerBrandLogoURL,
+      brandLogoURL,
+      unit
+   }: Props = $props();
+
+	let imageURL = $state('');
+   
+	let mintImageURL = $state('');
+   
 
    const randomID = bytesToHex(secp256k1.utils.randomPrivateKey()).slice(0,12)
 
@@ -27,7 +43,7 @@
 		const svg64 = btoa(xml); //for utf8: btoa(unescape(encodeURIComponent(xml)))
 		var a = document.createElement('a'); //Create <a>
 		a.href = 'data:image/svg+xml;base64,' + svg64; //Image Base64 Goes here
-		a.download = `${mintUrl}_${denomination}sats.svg` //File name Here
+		a.download = `${mintUrl}_${denomination}_${unit}.svg` //File name Here
 		a.click(); //Downloaded file
 	};
 </script>
@@ -36,8 +52,8 @@
 	<QRCodeImage text={token} scale={9} displayType="canvas" displayID="qr-{randomID}" />
 	<QRCodeImage text={mintUrl} scale={9} displayType="canvas" displayID="qr-mint-{randomID}" />
 </div>
-<button on:click={downloadNote}>
-<svg width="534" height="279" viewBox="0 0 534 279" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<button onclick={downloadNote} class="w-full">
+<svg class="w-full" viewBox="0 0 534 279" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
    <rect x="5" y="5" width="522" height="266" fill="white" stroke="{colorCode}" stroke-width="10" stroke-linejoin="bevel"/>
    <path d="M20.2149 33.7851C27.8282 32.5618 33.0083 25.3984 31.7851 17.7851C30.5618 10.1718 23.3984 4.99167 15.7851 6.21494C8.17179 7.43821 2.99166 14.6017 4.21493 22.2149C5.4382 29.8282 12.6016 35.0084 20.2149 33.7851Z" fill="{colorCode}"/>
    <path d="M11.5266 23.4778C11.5515 25.7944 13.4698 26.7338 15.956 27.1666L15.6843 30.3539L17.6248 30.519L17.8894 27.4156C18.3996 27.459 18.9218 27.4934 19.4408 27.5271L19.174 30.651L21.1136 30.8163L21.386 27.6299C21.807 27.6571 22.2202 27.6845 22.6226 27.7184L22.622 27.7284L25.2984 27.9573L25.4746 25.8851C25.4746 25.8851 24.0393 25.7904 24.0653 25.766C23.2793 25.6988 23.0625 25.2208 23.0216 24.8208C23.7666 16.0892 23.0216 24.8208 23.7666 16.0892C23.8221 15.8448 24.0012 15.4629 24.5504 15.5087C24.5274 15.4846 25.961 15.6292 25.961 15.6292L25.3264 13.5407L24.0189 13.1301C23.5489 13.0895 23.0872 13.0422 22.6335 13.0006L22.9076 9.77686L20.9693 9.61149L20.6972 12.801C20.1659 12.7447 19.6512 12.6966 19.1483 12.6542L19.4199 9.47937L17.4794 9.31429L17.2043 12.5321C13.9259 12.4415 11.5724 13.0686 11.0276 16.1075C10.5883 18.5544 11.6549 19.7537 13.4689 20.3561C12.2949 20.833 11.5055 21.7823 11.5266 23.4778ZM14.8294 16.8161C15.0338 14.407 19.1363 15.0325 20.4515 15.1432L20.0867 19.4143C18.7713 19.3019 14.615 19.3288 14.8294 16.8161ZM15.2179 22.919C15.4055 20.7273 18.8246 21.2761 19.9201 21.3694L19.5895 25.2431C18.4941 25.1498 15.0232 25.205 15.2179 22.919Z" fill="white" fill-opacity="0.5"/>
@@ -103,7 +119,7 @@
    <path d="M439.139 139.788V143.468H440.327V144H437.167V143.468H438.467V140.32H437.207V139.788H439.139ZM438.603 137.816C438.752 137.816 438.871 137.861 438.959 137.952C439.05 138.043 439.095 138.153 439.095 138.284C439.095 138.42 439.05 138.535 438.959 138.628C438.871 138.719 438.752 138.764 438.603 138.764C438.462 138.764 438.346 138.719 438.255 138.628C438.164 138.535 438.119 138.42 438.119 138.284C438.119 138.153 438.164 138.043 438.255 137.952C438.346 137.861 438.462 137.816 438.603 137.816Z" fill="white"/>
    <path d="M441.804 144V139.788H442.376L442.428 140.372C442.599 140.156 442.812 139.991 443.068 139.876C443.327 139.759 443.577 139.7 443.82 139.7C444.233 139.7 444.533 139.809 444.72 140.028C444.909 140.247 445.004 140.551 445.004 140.94V144H444.332V141.436C444.332 141.148 444.316 140.916 444.284 140.74C444.252 140.561 444.185 140.432 444.084 140.352C443.983 140.269 443.825 140.228 443.612 140.228C443.447 140.228 443.291 140.264 443.144 140.336C443 140.408 442.871 140.499 442.756 140.608C442.644 140.715 442.551 140.823 442.476 140.932V144H441.804Z" fill="white"/>
    <path d="M449.945 143.788C449.801 143.884 449.626 143.959 449.421 144.012C449.216 144.065 449.014 144.092 448.817 144.092C448.364 144.092 448.014 143.973 447.769 143.736C447.524 143.499 447.401 143.193 447.401 142.82V140.308H446.433V139.788H447.401V138.832L448.073 138.752V139.788H449.529L449.449 140.308H448.073V142.812C448.073 143.047 448.134 143.225 448.257 143.348C448.382 143.471 448.589 143.532 448.877 143.532C449.034 143.532 449.18 143.513 449.313 143.476C449.446 143.439 449.57 143.391 449.685 143.332L449.945 143.788Z" fill="white"/>
-   <text fill="black" xml:space="preserve" style="white-space: pre" font-family="Fira Code" font-size="22" font-weight="bold" letter-spacing="0em"><tspan x="55" y="64.848">{denomination}</tspan></text>
+   <text fill="black" xml:space="preserve" style="white-space: pre" font-family="Fira Code" font-size="14" font-weight="bold" letter-spacing="0em"><tspan x="55" y="64.848">{formatAmount(denomination, unit)}</tspan></text>
 <rect x="176" y="48" width="180" height="180" fill="url(#pattern0)"/>
    <path d="M514.278 42.3348C524.844 40.6372 532.032 30.696 530.335 20.1305C528.637 9.56502 518.696 2.37619 508.131 4.07381C497.565 5.77142 490.376 15.7126 492.074 26.2781C493.771 36.8436 503.713 44.0324 514.278 42.3348Z" fill="{colorCode}"/>
    <path d="M25.2781 275.335C35.8436 273.637 43.0324 263.696 41.3348 253.131C39.6372 242.565 29.696 235.376 19.1305 237.074C8.56502 238.771 1.37619 248.713 3.07381 259.278C4.77142 269.844 14.7126 277.032 25.2781 275.335Z" fill="{colorCode}"/>

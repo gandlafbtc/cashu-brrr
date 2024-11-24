@@ -1,65 +1,59 @@
 <script lang="ts">
-    import Note3 from "./Note3.svelte";
+    import { Toaster } from "svelte-sonner";
 	import Step1 from "./Step1.svelte";
 	import Step2 from "./Step2.svelte";
 	import Step3 from "./Step3.svelte";
 	import Step4 from "./Step4.svelte";
+    import { prints, step, type Print } from "./stores.svelte";
+    import { onMount } from "svelte";
 
-	let step = 1;
+	onMount(()=> {
+		if ($prints[0]?.tokens[0]?.token) {
+			//migrate old prints
+			const newPrints: Print[] = []
+			for (const print of $prints) {
+				const newPrint: Print = {
+					mint: print.mint,
+					ts: print.ts,
+					tokens: print.tokens.map(t=> t.token)
+				}
+			}
+		}
+		
+	})
 
-	let selectedMint;
-	let selectedDenomination: number = 1;
-	let selectedNumberOfNotes: number = 1;
-	let tokens = [];
-	let isPaid;
-	let isBrrr
 </script>
-<div class="h-screen w-screen bg-gradient-to-br from-primary to-secondary items-center flex justify-center flex-col p-2">
-	<div class="flex m-3 mb-3 gap-2 flex-col items-center  bg-base-100 w-full h-full p-5 rounded-lg shadow-md">
+<Toaster richColors  position="top-right"></Toaster>
+<div class="h-full min-h-screen w-screen bg-gradient-to-br from-primary to-secondary items-center flex justify-center flex-col p-2">
+	<div class="flex m-3 mb-3 gap-2 flex-col items-center  bg-base-100 w-full max-w-6xl h-full p-5 rounded-lg shadow-md">
 		<h1 class="w-full text-center font-bold text-2xl">Money printer go brrrrr</h1>
 		<ul class="steps">
-			<li data-content="🏦" class="step step-primary" />
+			<li data-content="🏦" class="step step-primary"></li>
 			<li
 				data-content="💵"
-				class="step {step > 1 ? 'step-primary' : ''}"
-			/>
+				class="step {$step > 1 ? 'step-primary' : ''}"
+			></li>
 			<li
 				data-content="⚡"
-				class="step {step > 2 ? 'step-primary' : ''}"
-			/>
+				class="step {$step > 2 ? 'step-primary' : ''}"
+			></li>
 			<li
 				data-content="🖨️"
-				class="step {step > 3 ? 'step-primary' : ''}"
-			/>
+				class="step {$step > 3 ? 'step-primary' : ''}"
+			></li>
 		</ul>
 		<div class="m-auto w-full">
-			{#if step === 1}
-				<Step1 bind:selectedMint bind:step bind:tokens bind:selectedNumberOfNotes bind:selectedDenomination />
-			{:else if step === 2}
-				<Step2
-					bind:step
-					bind:selectedMint
-					bind:selectedDenomination
-					bind:selectedNumberOfNotes
-				/>
-			{:else if step === 3}
-				<Step3
-					bind:step
-					bind:selectedMint
-					bind:selectedDenomination
-					bind:selectedNumberOfNotes
-					bind:tokens
-					bind:isPaid
-				/>
+			{#if $step === 1}
+			<Step1 />
+			{:else if $step === 2}
+			<Step2
+			/>
+			{:else if $step === 3}
+			<Step3
+			/>
 			{:else}
-				<Step4
-					bind:step
-					bind:selectedMint
-					bind:selectedDenomination
-					bind:selectedNumberOfNotes
-					bind:tokens
-					bind:isBrrr
-				/>
+			<Step4
+			/>
 			{/if}
 		</div>
 		<div class="flex gap-4">
