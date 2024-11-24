@@ -11,12 +11,25 @@ export type Print = {
 
 const initialValueSting: string = window.localStorage.getItem('prints') ?? '[]'
 
-const initialValue: Array<Print> = JSON.parse(initialValueSting);
+let initialValue: Array<Print> = JSON.parse(initialValueSting);
+
+//migrate old prints
+if (initialValue[0]?.tokens[0]?.token) {
+    const newPrints: Print[] = []
+    for (const print of initialValue) {
+        const newPrint: Print = {
+            mint: print.mint,
+            ts: print.ts,
+            tokens: print.tokens.map(t => t.token[0])
+        }
+    }
+    initialValue = newPrints
+}
 
 export const prints = writable<Array<Print>>(initialValue);
 
 prints.subscribe((value) => {
-		window.localStorage.setItem('prints', JSON.stringify(value));
+    window.localStorage.setItem('prints', JSON.stringify(value));
 });
 
 
@@ -27,19 +40,19 @@ const initialValueProofs: Array<Proof> = JSON.parse(initialValueStingProofs);
 export const proofs = writable<Array<Proof>>(initialValueProofs);
 
 proofs.subscribe((value) => {
-		window.localStorage.setItem('proofs', JSON.stringify(value));
+    window.localStorage.setItem('proofs', JSON.stringify(value));
 });
 
 
 
 
-export const wallet = writable<CashuWallet>() 
-export const mint = writable<Mint>() 
+export const wallet = writable<CashuWallet>()
+export const mint = writable<Mint>()
 
-export const step = writable<number>(1) 
-export const selectedDenomination = writable<number>(1) 
-export const selectedNumberOfNotes = writable<number>(1) 
-export const preparedTokens = writable<Token[]>([]) 
+export const step = writable<number>(1)
+export const selectedDenomination = writable<number>(1)
+export const selectedNumberOfNotes = writable<number>(1)
+export const preparedTokens = writable<Token[]>([])
 
 export const currentQuote = writable<MintQuoteResponse>()
 
@@ -53,19 +66,19 @@ const createDiscoveredMintsStore = () => {
 
     const add = (url: string) => {
         store.update((mints) => {
-            const existingMint = mints.find(m=>m.url === url)
-           if (!existingMint) {
-             mints = [...mints, {url, reviews: 1}]
-           }
-           else {
-             existingMint.reviews++
-           }
-           mints.sort((a, b) => b.reviews - a.reviews)
-           return mints
+            const existingMint = mints.find(m => m.url === url)
+            if (!existingMint) {
+                mints = [...mints, { url, reviews: 1 }]
+            }
+            else {
+                existingMint.reviews++
+            }
+            mints.sort((a, b) => b.reviews - a.reviews)
+            return mints
         });
     }
 
-    return {...store, add}
+    return { ...store, add }
 }
 
 export const discoveredMints = createDiscoveredMintsStore()

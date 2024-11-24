@@ -8,17 +8,17 @@
     import { onMount } from "svelte";
 
 	onMount(()=> {
-		if ($prints[0]?.tokens[0]?.token) {
-			//migrate old prints
-			const newPrints: Print[] = []
-			for (const print of $prints) {
-				const newPrint: Print = {
-					mint: print.mint,
-					ts: print.ts,
-					tokens: print.tokens.map(t=> t.token)
-				}
-			}
-		}
+		// if ($prints[0]?.tokens[0]?.token) {
+		// 	//migrate old prints
+		// 	const newPrints: Print[] = []
+		// 	for (const print of $prints) {
+		// 		const newPrint: Print = {
+		// 			mint: print.mint,
+		// 			ts: print.ts,
+		// 			tokens: print.tokens.map(t=> t.token)
+		// 		}
+		// 	}
+		// }
 		
 	})
 
