@@ -22,6 +22,7 @@ if (initialValue[0]?.tokens[0]?.token) {
             ts: print.ts,
             tokens: print.tokens.map(t => t.token[0])
         }
+        newPrints.push(newPrint)
     }
     initialValue = newPrints
 }
