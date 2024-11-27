@@ -7,9 +7,11 @@ import type {
 
 import { writable } from "svelte/store";
 import type { Mint } from "./utils";
+import { SimplePool } from "nostr-tools";
 
 export type Print = {
   tokens: Token[];
+  donation?: Token
   mint: string;
   ts: number;
 };
@@ -55,6 +57,7 @@ export const mint = writable<Mint>();
 export const step = writable<number>(1);
 export const selectedDenomination = writable<number>(1);
 export const selectedNumberOfNotes = writable<number>(1);
+export const donation = writable<number>(1);
 export const preparedTokens = writable<Token[]>([]);
 
 export const currentQuote = writable<MintQuoteResponse>();
@@ -63,6 +66,16 @@ export type DiscoveredMint = {
   url: string;
   reviews: number;
 };
+
+export type DiscoveredContact = {
+  url: string;
+  reviews: number;
+};
+export type Contact = {
+  npub: string
+  alias: string
+  picture?: string
+}
 
 const createDiscoveredMintsStore = () => {
   const store = writable<DiscoveredMint[]>([]);
@@ -83,4 +96,19 @@ const createDiscoveredMintsStore = () => {
   return { ...store, add };
 };
 
+const createDiscoveredContactsStore = () => {
+  const store = writable<Contact[]>([]);
+
+  const add = (npub: string, alias?: string, picture?: string) => {
+      store.update((context) => [...context, { npub, alias: alias?? '', picture }]);
+  }
+
+  return {...store, add}
+}
+
+export const discoveredContacts = createDiscoveredContactsStore()
+
+
 export const discoveredMints = createDiscoveredMintsStore();
+
+export const pool = new SimplePool()

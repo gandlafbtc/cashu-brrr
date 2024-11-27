@@ -1,10 +1,10 @@
 <script lang="ts">
   import { formatAmount } from "../utils";
 
-  let { selectedNumberOfNotes, selectedDenomination, unit } = $props();
+  let { selectedNumberOfNotes, selectedDenomination, unit, donationAmount, isDonate } = $props();
 </script>
 
-<div class="flex gap-1 items-center pb-5">
+<div class="flex flex-wrap gap-1 items-center pb-5">
   <span class="font-bold badge badge-success gap-2">
     {selectedNumberOfNotes}
     <svg
@@ -32,4 +32,10 @@
   <span class="font-bold badge badge-warning gap-2">
     {formatAmount(selectedDenomination * selectedNumberOfNotes, unit)}
   </span>
+  {#if isDonate}
+  +
+  <span class="font-bold badge badge-secondary gap-2">
+    {formatAmount(donationAmount, unit)}
+  </span>
+  {/if}
 </div>

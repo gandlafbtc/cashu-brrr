@@ -5,6 +5,10 @@
   import Step3 from "./Step3.svelte";
   import Step4 from "./Step4.svelte";
   import { step } from "./stores.svelte";
+  import { Bitcoin, Code, Copy, Heart, Zap } from "lucide-svelte";
+    import { copyTextToClipboard } from "./utils";
+    import DonateCashu from "./DonateCashu.svelte";
+    let showDonate = $state(false)
 </script>
 
 <Toaster richColors position="top-right"></Toaster>
@@ -35,38 +39,141 @@
       {/if}
     </div>
     <div class="flex gap-4">
-      <a
-        href="https://gandlaf.com/donate"
-        class="m-4 btn btn-sm btn-error btn-circle"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          class=" w-6 h-6"
+      <button
+        class="m-4 btn btn-sm btn-error flex"
+      onclick={()=>showDonate = !showDonate}
         >
-          <path
-            d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z"
-          />
-        </svg>
-      </a>
+        <Heart>
+
+        </Heart>
+        {#if showDonate}
+          Hide
+        {:else}
+          
+        Donate
+        {/if}
+      </button>
       <a
         href="https://github.com/gandlafbtc/cashu-brrr"
-        class="m-4 btn btn-sm btn-info btn-circle"
+        class="m-4 btn btn-sm btn-info "
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          class="w-6 h-6"
-        >
-          <path
-            fill-rule="evenodd"
-            d="M14.447 3.027a.75.75 0 01.527.92l-4.5 16.5a.75.75 0 01-1.448-.394l4.5-16.5a.75.75 0 01.921-.526zM16.72 6.22a.75.75 0 011.06 0l5.25 5.25a.75.75 0 010 1.06l-5.25 5.25a.75.75 0 11-1.06-1.06L21.44 12l-4.72-4.72a.75.75 0 010-1.06zm-9.44 0a.75.75 0 010 1.06L2.56 12l4.72 4.72a.75.75 0 11-1.06 1.06L.97 12.53a.75.75 0 010-1.06l5.25-5.25a.75.75 0 011.06 0z"
-            clip-rule="evenodd"
-          />
-        </svg>
+       <Code></Code>
+       Code
       </a>
     </div>
+    {#if showDonate}
+    
+    <div class="flex flex-col gap-2 flex-wrap">
+      <div class="flex flex-col gap-2 w-80">
+
+        <p>
+          Hi anon! If you appreciate the money printer, consider donating some sats. Value4Value!
+        </p>
+        <p>
+          Let's keep the money printer running.
+        </p>
+        <p>
+          Brrrrrrrrrrrrrrrrr...
+        </p>
+      </div>
+      <div class="flex gap-2 items-center">
+        <DonateCashu></DonateCashu>
+      </div>
+      <div class="flex gap-2 items-center">
+        <a
+              href="https://geyser.fund/project/nutstashapp"
+              target="_blank"
+              rel="nofollow noopener noreferrer"
+              class="rounded-full w-40 bg-[#2dd4bf] bg-opacity-35 hover:bg-opacity-100 transition-all"
+              >
+              <img src="/geyser.svg" alt="geyser" />
+            </a>
+            <button>
+              <Copy class='w-5 h-5' onclick={()=> copyTextToClipboard('https://geyser.fund/project/nutstashapp')}></Copy>
+            </button>
+            <p class="w-24 overflow-clip text-ellipsis text-xs text-nowrap">
+              https://geyser.fund/project/nutstashapp
+            </p>
+          </div>
+          <div class="flex gap-2 items-center">
+            <a
+            class="p-2 flex items-center gap-1 rounded-full bg-blue-600 w-40 bg-opacity-35 hover:bg-opacity-100 transition-all"
+            href="bitcoin:+glisteningstruggle62"
+            >
+            <Bitcoin></Bitcoin>
+            <p class="text-xs">PayNym</p>
+          </a>
+          <button>
+            <Copy class='w-5 h-5' onclick={()=> copyTextToClipboard('+glisteningstruggle62')}></Copy>
+          </button>
+          <p class="w-24 overflow-clip text-ellipsis text-xs break-all">
+            +glisteningstruggle62
+          </p>
+        </div>
+        <div class="flex gap-2 items-center">
+          <a
+          class="p-2 flex items-center gap-1 rounded-full bg-blue-600 w-40 bg-opacity-35 hover:bg-opacity-100 transition-all"
+          
+          href="bitcoin:PM8TJQQMZMvfVGsJ2bJmbtDnx2BVgcPThnF8XS9ApGvuzYDPWirVuMencyhvK8WBDTgeaLLEoGEYggTMJFwjDkW8HhfqijrYHStMiFhKfA7UYbwXqYB6"
+          >
+          <Bitcoin></Bitcoin>
+          <p class="text-xs">Payment code</p>
+        </a>
+        <button>
+          <Copy class='w-5 h-5' onclick={()=> copyTextToClipboard('PM8TJQQMZMvfVGsJ2bJmbtDnx2BVgcPThnF8XS9ApGvuzYDPWirVuMencyhvK8WBDTgeaLLEoGEYggTMJFwjDkW8HhfqijrYHStMiFhKfA7UYbwXqYB6')}></Copy>
+        </button>
+        <p class="w-24 overflow-clip text-ellipsis text-xs text-nowrap">
+          PM8TJQQMZMvfVGsJ2bJmbtDnx2BVgcPThnF8XS9ApGvuzYDPWirVuMencyhvK8WBDTgeaLLEoGEYggTMJFwjDkW8HhfqijrYHStMiFhKfA7UYbwXqYB6
+        </p>
+      </div>
+      <div class="flex gap-2 items-center">
+        <a
+        class="p-2 flex items-center gap-1 rounded-full bg-orange-600 w-40 bg-opacity-35 hover:bg-opacity-100 transition-all"
+        
+        href="bitcoin:bc1q8sy2kd4c907r5y05wwghldpvvnkapkn7yrvs2u"
+        >
+        <Bitcoin></Bitcoin>
+        <p class="text-xs">Onchain address</p>
+      </a>
+      <button>
+        <Copy class='w-5 h-5' onclick={()=> copyTextToClipboard('bc1q8sy2kd4c907r5y05wwghldpvvnkapkn7yrvs2u')}></Copy>
+      </button>
+      <p class="w-24 overflow-clip text-ellipsis text-xs">
+        bc1q8sy2kd4c907r5y05wwghldpvvnkapkn7yrvs2u
+      </p>
+    </div>
+    <div class="flex gap-2 items-center">
+      <a
+      class="p-2 flex items-center gap-1 rounded-full bg-yellow-600 w-40 bg-opacity-35 hover:bg-opacity-100 transition-all"
+      
+      href="lightning:lno1zrxq8pjw7qjlm68mtp7e3yvxee4y5xrgjhhyf2fxhlphpckrvevh50u0q0pdmt47mvjvq77n7thpvj9m3hcppl4hu95ue953uq46ej46el9rxqsznmjm9j44w9jntmpsq9eec9002pmyjjf6w75v88dn4472zmctcdxqqvewfj3vxyqv54q4gzy7v60u27kgwnurfzpykxnwz0jr4gzg4swld8pglcv7rlulaemm665l4pmftckhj6vwq2e6l4zk8xc53rgt7dyfdd9j86pgfsgmhx67v4a64lfeqggchfm0uqqs6jz4x5lxj3f6qw7vxe4fg8s4z5"
+      >
+      <Zap></Zap>
+      <p class="text-xs">Bolt 12</p>
+    </a>
+    <button>
+      <Copy class='w-5 h-5' onclick={()=> copyTextToClipboard('lno1zrxq8pjw7qjlm68mtp7e3yvxee4y5xrgjhhyf2fxhlphpckrvevh50u0q0pdmt47mvjvq77n7thpvj9m3hcppl4hu95ue953uq46ej46el9rxqsznmjm9j44w9jntmpsq9eec9002pmyjjf6w75v88dn4472zmctcdxqqvewfj3vxyqv54q4gzy7v60u27kgwnurfzpykxnwz0jr4gzg4swld8pglcv7rlulaemm665l4pmftckhj6vwq2e6l4zk8xc53rgt7dyfdd9j86pgfsgmhx67v4a64lfeqggchfm0uqqs6jz4x5lxj3f6qw7vxe4fg8s4z5')}></Copy>
+    </button>
+    <p class="w-24 overflow-clip text-ellipsis text-xs">
+      lno1zrxq8pjw7qjlm68mtp7e3yvxee4y5xrgjhhyf2fxhlphpckrvevh50u0q0pdmt47mvjvq77n7thpvj9m3hcppl4hu95ue953uq46ej46el9rxqsznmjm9j44w9jntmpsq9eec9002pmyjjf6w75v88dn4472zmctcdxqqvewfj3vxyqv54q4gzy7v60u27kgwnurfzpykxnwz0jr4gzg4swld8pglcv7rlulaemm665l4pmftckhj6vwq2e6l4zk8xc53rgt7dyfdd9j86pgfsgmhx67v4a64lfeqggchfm0uqqs6jz4x5lxj3f6qw7vxe4fg8s4z5
+    </p>
   </div>
+  <div class="flex gap-2 items-center">
+    <a
+    class="p-2 flex items-center gap-1 rounded-full bg-yellow-600 w-40 bg-opacity-35 hover:bg-opacity-100 transition-all"
+    href="lightning:nutstashapp@geyser.fund"
+    >
+    <Zap></Zap>
+    <p class="text-xs">Lightning address</p>
+  </a>
+  <button>
+    <Copy class='w-5 h-5'onclick={()=> copyTextToClipboard('nutstashapp@geyser.fund')}></Copy>
+  </button>
+  <p class="w-24 overflow-clip text-ellipsis text-xs">
+    nutstashapp@geyser.fund
+  </p>
+</div>
+</div>
+{/if}
+</div>
 </div>

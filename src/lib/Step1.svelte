@@ -3,6 +3,7 @@
   import {
     discoveredMints,
     mint,
+    pool,
     preparedTokens,
     prints,
     selectedDenomination,
@@ -12,7 +13,7 @@
     type Print,
   } from "./stores.svelte";
   import NotesCalc from "./comp/NotesCalc.svelte";
-  import { SimplePool, type Event, type Filter } from "nostr-tools";
+  import { type Event, type Filter } from "nostr-tools";
   import {
     delay,
     getAmountForTokenSet,
@@ -21,13 +22,13 @@
   } from "./utils";
   import UnitSelector from "./comp/UnitSelector.svelte";
   import { toast } from "svelte-sonner";
+    import { DEFAULT_RELAYS } from "../nostr";
 
   const mints = [
     "https://mint.minibits.cash/Bitcoin",
     "https://stablenut.umint.cash",
     "https://mint.lnvoltz.com",
   ];
-  const DEFAULT_RELAYS = ["wss://relay.damus.io", "wss://relay.primal.net"];
 
   let mintUrl = $state("");
   let isConnecting = $state(false);
@@ -53,7 +54,6 @@
       discoveredMints.set([]);
       const activeRelays = DEFAULT_RELAYS;
       const filter: Filter = { kinds: [38000], limit: 2000 };
-      const pool = new SimplePool();
       pool.subscribeMany(activeRelays, [filter], {
         onevent: (event: Event) => {
           const uTag = event.tags.find((t) => t[0] === "u");
@@ -188,6 +188,8 @@
               )}
               selectedNumberOfNotes={print.tokens.length}
               unit={print.tokens[0].unit}
+              isDonate={print.donation}
+              donationAmount={getAmountForTokenSet(print.donation?.proofs??[])}
             ></NotesCalc>
             <p class="break-all">
               {print.mint}

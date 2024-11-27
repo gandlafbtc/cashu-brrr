@@ -15,6 +15,7 @@
     "@tsconfig/svelte": "^5.0.0",
     "autoprefixer": "^10.4.14",
     "daisyui": "^4.7.3",
+    "lucide-svelte": "^0.461.0",
     "nostr-tools": "^2.10.3",
     "postcss": "^8.4.25",
     "prettier": "^3.3.3",

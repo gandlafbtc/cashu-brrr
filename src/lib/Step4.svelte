@@ -8,13 +8,15 @@
     wallet,
   } from "./stores.svelte";
   import { getAmountForTokenSet } from "./utils";
+    import ShareViaNostr from "./comp/ShareViaNostr.svelte";
 
-  let isBrrr = $state(false);
+  let active = $state('customize');
 
   let cornerInput: HTMLInputElement = $state();
   let brandInput: HTMLInputElement = $state();
   let brandImage: HTMLImageElement = $state();
   let cornerImage: HTMLImageElement = $state();
+
 
   let noteType = $state("nutstash");
 
@@ -31,8 +33,16 @@
     cornerBrandLogoURL = URL.createObjectURL(e.target.files[0]);
   };
 </script>
+<div class="flex w-full items-center justify-center">
 
-{#if !isBrrr}
+  <div role="tablist" class="tabs tabs-boxed min-w-80">
+    <button role="tab" class="tab" class:tab-active={active === 'customize'} onclick={()=> active = 'customize'}>Customize</button>
+    <button role="tab" class="tab" class:tab-active={active === 'print'} onclick={()=> active = 'print'}>Print</button>
+    <button role="tab" class="tab" class:tab-active={active === 'share'} onclick={()=> active = 'share'}>Share</button>
+  </div>
+</div>
+
+{#if active === 'customize'}
   <div class="flex flex-col gap-2 items-center w-full">
     <div class="flex flex-col gap-2">
       <div class="flex gap-2 flex-col">
@@ -64,10 +74,13 @@
     </div>
 
     <h2 class="font-bold text-lg text-center">Notes are ready to be printed</h2>
-    <button class="btn btn-primary mt-2" onclick={() => (isBrrr = true)}>
+    <button class="btn btn-primary mt-2" onclick={() => (active = 'print')}>
       Print now! BRRRRRRRRRR
     </button>
-
+    <button class="btn btn-secondary mt-2" onclick={() => (active ='share')}>
+      Share via nostr
+    </button>
+    
     <div class="flex flex-col gap-1 items-center pt-10">
       <span class="font-bold badge badge-success gap-2">
         {$selectedNumberOfNotes}
@@ -88,9 +101,13 @@
       </span>
     </div>
   </div>
-{:else}
+{:else if active === 'print'}
   <div>
+    <button class="btn btn-primary" onclick={()=> window.print()}>
+      Print
+    </button>
     <p class="font-bold">Press ctrl+P to print</p>
+
   </div>
   <div class="bg-white z-10 w-full">
     {#each $preparedTokens as token}
@@ -105,4 +122,7 @@
       />
     {/each}
   </div>
-{/if}
+    
+  {:else if active === 'share'}
+      <ShareViaNostr></ShareViaNostr>
+  {/if}
