@@ -50,6 +50,8 @@
         Brand Image:
         <input
           type="file"
+          class="file-input file-input-bordered"
+
           accept="image/*"
           oninput={getBrandURL}
           bind:this={brandInput}
@@ -57,6 +59,7 @@
         Corner Image:
         <input
           type="file"
+          class="file-input file-input-bordered"
           accept="image/*"
           oninput={getCornerURL}
           bind:this={cornerInput}

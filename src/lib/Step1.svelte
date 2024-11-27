@@ -93,6 +93,23 @@
 </script>
 
 <div class="flex flex-col gap-5 justify-center items-center">
+  <div class="w-full h-20 px-3 items-center justify-center rounded-lg border border-base-300">
+    <div class="fixed -mt-6 opacity-35 flex gap-2">Sponsors</div>
+    <div class="flex h-full items-center">
+
+      <a target="_blank" class="p-1 rounded-full bg-base-300 transition-all hover:bg-base-200 flex gap-1 items-center w-min" href="https://geyser.fund/project/brrr/rewards/view/5486">
+        <div class="avatar">
+          <div class="w-12 rounded-full">
+            <img src="/i.jpeg"/>
+          </div>
+        </div>
+        <p class="text-nowrap text-sm pr-2">
+          Become a sponsor
+        </p>
+      </a>
+      
+    </div>
+  </div>
   <p class="text-center font-bold text-lg">Connect to mint</p>
   <div class="flex flex-col lg:flex-row gap-2 flex-wrap">
     <button
