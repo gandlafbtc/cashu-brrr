@@ -81,7 +81,7 @@
       </div>
       <div class="flex gap-2 items-center">
         <a
-              href="https://geyser.fund/project/nutstashapp"
+              href="https://geyser.fund/project/brrr"
               target="_blank"
               rel="nofollow noopener noreferrer"
               class="rounded-full w-40 bg-[#2dd4bf] bg-opacity-35 hover:bg-opacity-100 transition-all"
@@ -89,10 +89,10 @@
               <img src="/geyser.svg" alt="geyser" />
             </a>
             <button>
-              <Copy class='w-5 h-5' onclick={()=> copyTextToClipboard('https://geyser.fund/project/nutstashapp')}></Copy>
+              <Copy class='w-5 h-5' onclick={()=> copyTextToClipboard('https://geyser.fund/project/brrr')}></Copy>
             </button>
             <p class="w-24 overflow-clip text-ellipsis text-xs text-nowrap">
-              https://geyser.fund/project/nutstashapp
+              https://geyser.fund/project/brrr
             </p>
           </div>
           <div class="flex gap-2 items-center">
