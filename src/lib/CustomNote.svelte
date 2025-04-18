@@ -27,13 +27,11 @@
 
   let imageURL = $state("");
 
-  let mintImageURL = $state("");
 
   const randomID = bytesToHex(secp256k1.utils.randomPrivateKey()).slice(0, 12);
 
   onMount(() => {
     imageURL = document.getElementById("qr-" + randomID).toDataURL();
-    mintImageURL = document.getElementById("qr-mint-" + randomID).toDataURL();
   });
 
   const downloadNote = async (e) => {
@@ -1337,13 +1335,7 @@
     />
     <rect x="43" y="141" width="97" height="97" fill="url(#pattern4)" />
     <rect x="394" y="31" width="97" height="97" fill="url(#pattern5)" />
-    <image
-      x="398"
-      y="152"
-      id="image1_20_552"
-      width="84"
-      xlink:href={mintImageURL}
-    />
+    
     <image
       x="178"
       y="50"
