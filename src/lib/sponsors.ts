@@ -13,4 +13,12 @@ export const SPONSORS: Sponsor[] = [{
     tier: "SILVER",
     imageLink: "https://i.nostr.build/kYAs8I4cZJgKt1fV.jpg",
     amount: "100K"
+}
+,
+{
+    name: "⚡ats 'N' Fact⚡",
+    link: "https://njump.me/npub1yrnuj56rnen08zp2h9h7p74ghgjx6ma39spmpj6w9hzxywutevsst7k5cx",
+    tier: "SILVER",
+    imageLink: "https://image.nostr.build/2a0ee43dca043f29a4c03a1c83bebebd07dfa6678cc6fba31e239db2f3ad2143.png",
+    amount: "100K"
 }]

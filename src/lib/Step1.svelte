@@ -99,8 +99,7 @@
 <div class="flex flex-col gap-5 justify-center items-center">
   <div class="w-full h-20 px-3 items-center justify-center rounded-lg border border-base-300">
     <div class="fixed -mt-6 opacity-35 flex gap-2">Sponsors</div>
-    <div class="flex h-full items-center">
-
+    <div class="flex h-full items-center gap-2">
       {#each SPONSORS as sponsor}
         <Sponsor {sponsor}></Sponsor>
       {/each}
