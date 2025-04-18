@@ -9,6 +9,7 @@
   } from "./stores.svelte";
   import { getAmountForTokenSet } from "./utils";
     import ShareViaNostr from "./comp/ShareViaNostr.svelte";
+    import ComicNote from "./ComicNote.svelte";
 
   let active = $state('customize');
 
@@ -17,8 +18,9 @@
   let brandImage: HTMLImageElement = $state();
   let cornerImage: HTMLImageElement = $state();
 
+  let design = $state(3);
 
-  let noteType = $state("nutstash");
+  let selectedTemplate = $state("comic");
 
   //custom note
   let colorCode = $state("#5db075");
@@ -44,7 +46,55 @@
 
 {#if active === 'customize'}
   <div class="flex flex-col gap-2 items-center w-full">
+    <div class="flex gap-2">
+      <button onclick={()=> selectedTemplate="comic"} class="w-32 p-2 border-2 rounded-md {selectedTemplate==="comic"?"border-primary":"border-base-300"}">
+        <ComicNote
+        {design}
+        denomination={getAmountForTokenSet($preparedTokens[0]?.proofs??[])}
+        mintUrl={$wallet?.mint.mintUrl}
+        token={"blabla"}
+        unit={$preparedTokens[0]?.unit??'sat'}
+        />
+      </button>
+      <button onclick={()=> selectedTemplate="custom"} class="w-32 p-2 border-2 rounded-md {selectedTemplate==="custom"?"border-primary":"border-base-300"}">
+        <CustomNote 
+        {brandLogoURL}
+        {colorCode}
+        {cornerBrandLogoURL}
+        denomination={getAmountForTokenSet($preparedTokens[0]?.proofs??[])}
+        mintUrl={$wallet?.mint.mintUrl}
+        token={"blabla"}
+        unit={$preparedTokens[0]?.unit??'sat'}
+        />
+      </button>
+
+    </div>
     <div class="flex flex-col gap-2">
+      {#if selectedTemplate === 'comic'}
+      <p class="my-2">
+        Comic nuts by <a href="https://njump.me/npub1gwa27rpgum8mr9d30msg8cv7kwj2lhav2nvmdwh3wqnsa5vnudxqlta2sz" class="link link-primary" target="_blank">@BitPopart</a>
+      </p>
+      Designs
+      <input
+      type="range"
+      min="3"
+      max="25"
+      bind:value={design}
+      class="range range-primary"
+      />
+
+      <ComicNote
+      {design}
+      denomination={getAmountForTokenSet($preparedTokens[0]?.proofs??[])}
+      mintUrl={$wallet?.mint.mintUrl}
+      token={"blabla"}
+      unit={$preparedTokens[0]?.unit??'sat'}
+      />
+        
+      {:else if selectedTemplate === "custom"}
+      <p class="my-2">
+        Custom note by <a href="https://njump.me/npub1cj6ndx5akfazux7f0vjl4fyx9k0ulf682p437fe03a9ndwqjm0tqj886t6" class="link link-primary" target="_blank">@gandlaf21</a>
+      </p>
       <div class="flex gap-2 flex-col">
         Select Color: <input type="color" bind:value={colorCode} />
         Brand Image:
@@ -65,15 +115,18 @@
           bind:this={cornerInput}
         />
       </div>
+
+        
       <CustomNote
-        {brandLogoURL}
-        {colorCode}
-        {cornerBrandLogoURL}
-        denomination={getAmountForTokenSet($preparedTokens[0]?.proofs??[])}
-        mintUrl={$wallet?.mint.mintUrl}
-        token={"blabla"}
-        unit={$preparedTokens[0]?.unit??'sat'}
+      {brandLogoURL}
+      {colorCode}
+      {cornerBrandLogoURL}
+      denomination={getAmountForTokenSet($preparedTokens[0]?.proofs??[])}
+      mintUrl={$wallet?.mint.mintUrl}
+      token={"blabla"}
+      unit={$preparedTokens[0]?.unit??'sat'}
       />
+      {/if}
     </div>
 
     <h2 class="font-bold text-lg text-center">Notes are ready to be printed</h2>
@@ -114,15 +167,25 @@
   </div>
   <div class="bg-white z-10 w-full">
     {#each $preparedTokens as token}
-      <CustomNote
-        {brandLogoURL}
-        {colorCode}
-        {cornerBrandLogoURL}
-        denomination={getAmountForTokenSet(token.proofs)}
-        mintUrl={token.mint}
-        token={getEncodedTokenV4(token)}
-        unit={$wallet?.unit}
-      />
+    {#if selectedTemplate==="comic"}
+      <ComicNote
+      {design}
+      denomination={getAmountForTokenSet(token.proofs)}
+      mintUrl={token.mint}
+      token={getEncodedTokenV4(token)}
+      unit={$wallet?.unit}
+    />
+    {:else if selectedTemplate ==="custom"}
+    <CustomNote
+      {brandLogoURL}
+      {colorCode}
+      {cornerBrandLogoURL}
+      denomination={getAmountForTokenSet(token.proofs)}
+      mintUrl={token.mint}
+      token={getEncodedTokenV4(token)}
+      unit={$wallet?.unit}
+    />
+    {/if}
     {/each}
   </div>
     
