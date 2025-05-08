@@ -1,4 +1,5 @@
 <script lang="ts">
+
   import { QRCodeImage } from "svelte-qrcode-image";
 
   interface Props {
@@ -34,34 +35,75 @@
 
   onMount(async () => {
     const quote = await $wallet.createMintQuote(
-      $selectedDenomination * $selectedNumberOfNotes+$donation,
+      $selectedDenomination * $selectedNumberOfNotes + $donation,
     );
+    console.log("Quote generado:", quote);
+    console.log("ID de quote:", quote.quote);
+
     invoice = quote.request;
 
     setTimeout(() => checkQuote(quote.quote), 5000);
   });
 
   const checkQuote = async (quote: string) => {
-    const newquote = await $wallet.checkMintQuote(quote);
-    if (newquote.state === MintQuoteState.PAID) {
-      const outputAmounts = await createOutputAmounts(
-        $selectedDenomination,
-        $selectedNumberOfNotes,
-        true,
-      );
-      const ps = await $wallet.mintProofs(
-        $selectedDenomination * $selectedNumberOfNotes+$donation,
-        quote,
-        {
-          outputAmounts,
-        },
-      );
-      await handleProofs(ps);
-      donation.set(0)
-      step.set(4);
-    } else {
-      await delay(5000);
-      checkQuote(quote);
+    try {
+      const newquote = await $wallet.checkMintQuote(quote);
+      console.log("Estado del quote:", newquote.state);
+
+      if (newquote.state === MintQuoteState.PAID || newquote.paid === true) {
+        isPaid = true;
+        console.log("Invoice pagada ✅. Minting proofs...");
+
+        const outputAmounts = await createOutputAmounts(
+          $selectedDenomination,
+          $selectedNumberOfNotes,
+          true,
+        );
+
+        const ps = await $wallet.mintProofs(
+          $selectedDenomination * $selectedNumberOfNotes + $donation,
+          quote,
+          { outputAmounts }
+        );
+
+        console.log("Proofs generados:", ps);
+
+        await handleProofs(ps);
+        donation.set(0);
+        step.set(4);
+      } else {
+        console.log("Aún no pagado. Reintentando en 5s...");
+        await delay(5000);
+        checkQuote(quote);
+      }
+    } catch (e: any) {
+      // ⚠️ Este bloque se activa si cashu-ts lanza un error incluso con estado válido
+      const message = e?.message?.toLowerCase() ?? "";
+      console.error("Error en checkQuote:", e);
+
+      if (message.includes("pending")) {
+        console.log("Estado pending, reintentando en 5s...");
+        await delay(5000);
+        checkQuote(quote);
+      } else if (message.includes("paid")) {
+        console.log("Estado 'paid' dentro de error, intentando seguir...");
+        isPaid = true;
+        const outputAmounts = await createOutputAmounts(
+          $selectedDenomination,
+          $selectedNumberOfNotes,
+          true,
+        );
+        const ps = await $wallet.mintProofs(
+          $selectedDenomination * $selectedNumberOfNotes + $donation,
+          quote,
+          { outputAmounts }
+        );
+        await handleProofs(ps);
+        donation.set(0);
+        step.set(4);
+      } else {
+        toast.error("Error checking payment status");
+      }
     }
   };
 
@@ -124,6 +166,7 @@
     }
     return {tokens: tokens, donation: donationToken};
   };
+
 </script>
 
 <!-- content here -->
@@ -172,6 +215,7 @@
     Copy
   </button>
 </div>
+
 <p class="opacity-50">
   *Overpaid LN fees will be donated to the money printer
 </p>
@@ -179,4 +223,5 @@
   {:else}
     <span class="loading loading-dots loading-md"></span>
   {/if}
+
 </div>
