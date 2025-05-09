@@ -200,7 +200,7 @@
         onclick={validate}
         disabled={isLoading || !inputToken.startsWith('cashu')}
       >
-        Validar token
+        Validate token
       </button>
       <p class="opacity-50">
         *Overpaid tokens will be donated to the money printer

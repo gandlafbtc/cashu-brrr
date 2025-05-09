@@ -30,7 +30,7 @@
     "https://mint.cubabitcoin.org",
     "https://mint.lnvoltz.com",
     "https://mint.minibits.cash/Bitcoin",
-    "https://stablenut.umint.cash"
+    "https://stablenut.cashu.network/"
   ];
 
   let mintUrl = $state("");

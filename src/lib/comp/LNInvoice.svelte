@@ -77,7 +77,6 @@
         checkQuote(quote);
       }
     } catch (e: any) {
-      // ⚠️ Este bloque se activa si cashu-ts lanza un error incluso con estado válido
       const message = e?.message?.toLowerCase() ?? "";
       console.error("Error en checkQuote:", e);
 
