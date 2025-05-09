@@ -192,9 +192,16 @@
         class="input input-primary"
         placeholder="cashuB...."
         bind:value={inputToken}
-        onpaste={validate}
         disabled={isLoading}
       />
+
+      <button
+        class="btn btn-primary mt-2"
+        onclick={validate}
+        disabled={isLoading || !inputToken.startsWith('cashu')}
+      >
+        Validate token
+      </button>
       <p class="opacity-50">
         *Overpaid tokens will be donated to the money printer
       </p>
