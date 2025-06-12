@@ -10,6 +10,8 @@
   import { getAmountForTokenSet } from "./utils";
     import ShareViaNostr from "./comp/ShareViaNostr.svelte";
     import ComicNote from "./ComicNote.svelte";
+    import encodeQR from "qr";
+    import JSZip from "jszip";
 
   let active = $state('customize');
 
@@ -34,6 +36,60 @@
   const getCornerURL = (e) => {
     cornerBrandLogoURL = URL.createObjectURL(e.target.files[0]);
   };
+
+  const downloadQRs = async () => {
+    const zip = new JSZip();
+    
+    // Add each QR code to the zip file
+    $preparedTokens.forEach((token, index) => {
+      // Generate the SVG
+      let svg = encodeQR(getEncodedTokenV4(token), "svg");
+      
+      // Add a white background by inserting a rectangle element
+      // Find where the SVG element starts
+      const svgStartIndex = svg.indexOf("<svg");
+      if (svgStartIndex !== -1) {
+        // Find where the content after the svg tag starts
+        const contentStartIndex = svg.indexOf(">", svgStartIndex) + 1;
+        if (contentStartIndex !== 0) {
+          // Extract viewBox to determine size
+          const viewBoxMatch = svg.match(/viewBox="([^"]+)"/);
+          let width = 100;
+          let height = 100;
+          
+          if (viewBoxMatch && viewBoxMatch[1]) {
+            const viewBoxValues = viewBoxMatch[1].split(" ");
+            if (viewBoxValues.length >= 4) {
+              width = parseFloat(viewBoxValues[2]);
+              height = parseFloat(viewBoxValues[3]);
+            }
+          }
+          
+          // Insert a white rectangle as the first element after the svg tag
+          const whiteRect = `<rect width="${width}" height="${height}" fill="white"/>`;
+          svg = svg.slice(0, contentStartIndex) + whiteRect + svg.slice(contentStartIndex);
+        }
+      }
+      // Use a more readable name for each file based on the token amount
+      const amount = getAmountForTokenSet(token.proofs);
+      const unit = token.unit || 'sat';
+      zip.file(`${amount}_${unit}_${index + 1}.svg`, svg);
+    });
+    
+    // Generate the zip file
+    const zipBlob = await zip.generateAsync({ type: "blob" });
+    
+    // Download the zip file
+    const url = URL.createObjectURL(zipBlob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "cashu_qr_codes.zip";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
 </script>
 <div class="flex w-full items-center justify-center">
 
@@ -130,12 +186,18 @@
     </div>
 
     <h2 class="font-bold text-lg text-center">Notes are ready to be printed</h2>
-    <button class="btn btn-primary mt-2" onclick={() => (active = 'print')}>
-      Print now! BRRRRRRRRRR
-    </button>
-    <button class="btn btn-secondary mt-2" onclick={() => (active ='share')}>
-      Share via nostr
-    </button>
+    <div class="flex flex-col gap-2">
+
+      <button class="btn btn-primary" onclick={() => (active = 'print')}>
+        Print now! BRRRRRRRRRR
+      </button>
+      <button class="btn  btn-outline btn-secondary" onclick={downloadQRs}>
+        Download QR codes only
+      </button>
+      <button class="btn btn-secondary" onclick={() => (active ='share')}>
+        Share via nostr
+      </button>
+    </div>
     
     <div class="flex flex-col gap-1 items-center pt-10">
       <span class="font-bold badge badge-success gap-2">
