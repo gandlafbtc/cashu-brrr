@@ -80,6 +80,9 @@ const formatFiat = (amount: number, unit?: string): string => {
 
 export const loadMint = async (mintUrl: string): Promise<Mint> => {
   try {
+    if (!/^https?:\/\//i.test(mintUrl)) {
+      mintUrl = "https://" + mintUrl;
+    }
     const cashuMint = new CashuMint(mintUrl);
     const mintInfo = await cashuMint.getInfo();
     const mintAllKeysets = await cashuMint.getKeySets();
@@ -103,7 +106,7 @@ export const getWalletWithUnit = async (
   mint: Mint,
   unit = "sat",
 ): Promise<CashuWallet> => {
-  const keys = mint.keys.keysets.find((ks) => ks.unit);
+  const keys = mint.keys.keysets.find((ks) => ks.unit === unit);
   const keysets = mint.keysets.keysets.filter((ks) => ks.unit === unit);
   const wallet = new CashuWallet(new CashuMint(mint.url), {
     mintInfo: mint.info,
