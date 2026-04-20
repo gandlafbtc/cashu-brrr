@@ -1,8 +1,3 @@
-import type { MintKeys } from "@cashu/cashu-ts";
-
-interface Mint {
-  mintUrl: string;
-  keys: MintKeys;
-}
+import type { Mint } from "@/types/cashu";
 
 export type { Mint };

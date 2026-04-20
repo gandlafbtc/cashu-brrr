@@ -1,7 +1,13 @@
 <script lang="ts">
-  import { formatAmount } from "../utils";
+  import { formatAmount } from "@/lib/utils";
 
-  let { selectedNumberOfNotes, selectedDenomination, unit, donationAmount, isDonate } = $props();
+  let {
+    selectedNumberOfNotes,
+    selectedDenomination,
+    unit,
+    donationAmount,
+    isDonate,
+  } = $props();
 </script>
 
 <div class="flex flex-wrap gap-1 items-center pb-5">
@@ -33,9 +39,9 @@
     {formatAmount(selectedDenomination * selectedNumberOfNotes, unit)}
   </span>
   {#if isDonate}
-  +
-  <span class="font-bold badge badge-secondary gap-2">
-    {formatAmount(donationAmount, unit)}
-  </span>
+    +
+    <span class="font-bold badge badge-secondary gap-2">
+      {formatAmount(donationAmount, unit)}
+    </span>
   {/if}
 </div>

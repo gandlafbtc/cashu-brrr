@@ -3,15 +3,22 @@
   import { QRCodeImage } from "svelte-qrcode-image";
   import { secp256k1 } from "@noble/curves/secp256k1";
   import { bytesToHex } from "@noble/curves/abstract/utils";
-  import { formatAmount } from "./utils";
+  import { formatAmount } from "@/lib/utils";
 
   interface Props {
+    /** Token denomination value */
     denomination: number;
+    /** Mint URL */
     mintUrl: string;
+    /** Encoded Cashu token */
     token: string;
+    /** Brand color code */
     colorCode: string;
+    /** Corner brand logo URL */
     cornerBrandLogoURL: string;
+    /** Main brand logo URL */
     brandLogoURL: string;
+    /** Token unit (sat, usd, etc.) */
     unit: string;
   }
 
@@ -27,21 +34,33 @@
 
   let imageURL = $state("");
 
-
+  // Generate unique ID for this note instance
   const randomID = bytesToHex(secp256k1.utils.randomPrivateKey()).slice(0, 12);
 
+  /**
+   * Convert QR code canvas to data URL for embedding in SVG
+   */
   onMount(() => {
-    imageURL = document.getElementById("qr-" + randomID).toDataURL();
+    const canvas = document.getElementById(
+      "qr-" + randomID,
+    ) as HTMLCanvasElement | null;
+    if (canvas) imageURL = canvas.toDataURL();
   });
 
-  const downloadNote = async (e) => {
-    const svg = e.target.nearestViewportElement;
+  /**
+   * Download the note as SVG file
+   */
+  const downloadNote = async (e: Event) => {
+    const target = e.target as SVGElement;
+    const svg = target.viewportElement;
+    if (!svg) return;
+
     const xml = new XMLSerializer().serializeToString(svg);
-    const svg64 = btoa(xml); //for utf8: btoa(unescape(encodeURIComponent(xml)))
-    var a = document.createElement("a"); //Create <a>
-    a.href = "data:image/svg+xml;base64," + svg64; //Image Base64 Goes here
-    a.download = `${mintUrl}_${denomination}_${unit}.svg`; //File name Here
-    a.click(); //Downloaded file
+    const svg64 = btoa(xml);
+    const a = document.createElement("a");
+    a.href = "data:image/svg+xml;base64," + svg64;
+    a.download = `${mintUrl}_${denomination}_${unit}.svg`;
+    a.click();
   };
 </script>
 
@@ -1335,7 +1354,7 @@
     />
     <rect x="43" y="141" width="97" height="97" fill="url(#pattern4)" />
     <rect x="394" y="31" width="97" height="97" fill="url(#pattern5)" />
-    
+
     <image
       x="178"
       y="50"

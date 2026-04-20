@@ -1,0 +1,157 @@
+{
+  "name": "Sunset Orange",
+  "description": "Custom template: Sunset Orange",
+  "author": "LazerClippy",
+  "version": "1.0",
+  "createdAt": "2025-11-20T02:30:50.893Z",
+  "front": {
+    "bgGradientType": "linear",
+    "gradientType": "linear",
+    "bgSolidColor": "#F77F00",
+    "gradientAngle": 130,
+    "gradientStops": [
+      {
+        "offset": 0,
+        "color": "#ff7800"
+      },
+      {
+        "offset": 22,
+        "color": "#e66100"
+      },
+      {
+        "offset": 100,
+        "color": "#7209B7"
+      }
+    ],
+    "radialCenterX": 50,
+    "radialCenterY": 50,
+    "enableTopLeftIcon": true,
+    "topLeftIcon": "bitcoin",
+    "customLogoUrl": "",
+    "topLeftIconColor": "#590064",
+    "enableIconColorOverride": true,
+    "topLeftIconSize": 37,
+    "topLeftIconX": 0,
+    "topLeftIconY": 4,
+    "topLeftIconOpacity": 100,
+    "enableHeaderText": true,
+    "headerText": "Cashu Token\nRedeemable with Cashu\nWallet of choice",
+    "headerTextColor": "#590064",
+    "headerTextX": 150,
+    "headerTextY": 0,
+    "enableQrCode": true,
+    "qrGradientType": "solid",
+    "qrGradientAngle": 41,
+    "qrGradientStops": [
+      {
+        "offset": 41,
+        "color": "#ff7a00"
+      },
+      {
+        "offset": 86,
+        "color": "#813d9c"
+      }
+    ],
+    "qrBackgroundColor": "#FFFFFF",
+    "qrBorderColor": "#590064",
+    "qrCodeColor": "#590064",
+    "disableQrBorder": false,
+    "disableQrBackground": false,
+    "qrX": 20,
+    "qrY": 72,
+    "enableDenomination": true,
+    "denominationColor": "#F77F00",
+    "bottomBoxColor": "#FFFFFF",
+    "bottomTextColor": "#666666",
+    "customBottomText": "",
+    "denominationX": 0,
+    "denominationY": 219,
+    "customImages": [],
+    "enableGuideText": false,
+    "guideText": "How to redeem:\n1. Download a Cashu wallet\n2. Scan the QR code\n3. Tokens are now in your wallet",
+    "guideTextColor": "#333333",
+    "guideBackgroundColor": "#FFFFFF",
+    "guideBorderColor": "#F77F00",
+    "disableGuideBorder": false,
+    "disableGuideBackground": false,
+    "guideX": 10,
+    "guideY": 90,
+    "guideWidth": 140,
+    "guideHeight": 100
+  },
+  "back": {
+    "bgGradientType": "linear",
+    "gradientType": "linear",
+    "bgSolidColor": "#F77F00",
+    "gradientAngle": 130,
+    "gradientStops": [
+      {
+        "offset": 0,
+        "color": "#ff7800"
+      },
+      {
+        "offset": 22,
+        "color": "#e66100"
+      },
+      {
+        "offset": 100,
+        "color": "#7209B7"
+      }
+    ],
+    "radialCenterX": 50,
+    "radialCenterY": 50,
+    "enableTopLeftIcon": true,
+    "topLeftIcon": "bitcoin",
+    "customLogoUrl": "",
+    "topLeftIconColor": "#590064",
+    "enableIconColorOverride": true,
+    "topLeftIconSize": 37,
+    "topLeftIconX": 0,
+    "topLeftIconY": 4,
+    "topLeftIconOpacity": 100,
+    "enableHeaderText": true,
+    "headerText": "Cashu Token\nRedeemable with Cashu\nWallet of choice",
+    "headerTextColor": "#590064",
+    "headerTextX": 150,
+    "headerTextY": 0,
+    "enableQrCode": false,
+    "qrGradientType": "solid",
+    "qrGradientAngle": 90,
+    "qrGradientStops": [
+      {
+        "offset": 0,
+        "color": "#FFFFFF"
+      },
+      {
+        "offset": 100,
+        "color": "#F0F0F0"
+      }
+    ],
+    "qrBackgroundColor": "#FFFFFF",
+    "qrBorderColor": "#F77F00",
+    "qrCodeColor": "#000000",
+    "disableQrBorder": false,
+    "disableQrBackground": false,
+    "qrX": 20,
+    "qrY": 93,
+    "enableDenomination": false,
+    "denominationColor": "#F77F00",
+    "bottomBoxColor": "#FFFFFF",
+    "bottomTextColor": "#666666",
+    "customBottomText": "",
+    "denominationX": 0,
+    "denominationY": 219,
+    "customImages": [],
+    "enableGuideText": true,
+    "guideText": "How to redeem:\n1. Download a Cashu wallet\n(For example: Minibits or Sovran)\n2. Set it up and navigate to the Receive tab\n2. Scan the QR code on Front\n3. Tokens are now in your wallet\n-\nTo Learn more about Cashu visit Cashu.space",
+    "guideTextColor": "#590064",
+    "guideBackgroundColor": "#f77f00",
+    "guideBorderColor": "#590064",
+    "disableGuideBorder": false,
+    "disableGuideBackground": false,
+    "guideX": 9,
+    "guideY": 99,
+    "guideWidth": 140,
+    "guideHeight": 76
+  }
+}

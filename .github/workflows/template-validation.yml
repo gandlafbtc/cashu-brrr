@@ -1,0 +1,84 @@
+name: Template Validation
+
+on:
+  pull_request:
+    paths:
+      - 'public/mountainlake-templates/*.json'
+      - 'src/features/templates/mountainlake/mountainlake-templates.ts'
+
+jobs:
+  validate-templates:
+    runs-on: ubuntu-latest
+    name: Validate Mountainlake Templates
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
+      - name: Install jq (for JSON validation)
+        run: sudo apt-get update && sudo apt-get install -y jq
+        
+      - name: Find changed template files
+        id: changed-files
+        uses: tj-actions/changed-files@v40
+        with:
+          files: public/mountainlake-templates/*.mountainlake.json
+          
+      - name: Validate changed templates
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: |
+          echo "🏔️ Validating changed template files..."
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            echo "Validating: $file"
+            node scripts/addTemplate.mjs "$file" --dry-run || {
+              echo "❌ $file is invalid"
+              exit 1
+            }
+            echo "✅ $file is valid"
+            echo ""
+          done
+          
+      - name: Check template list is up to date
+        run: |
+          echo "🔍 Checking if template list is up to date..."
+          
+          # Check if there are any uncommitted changes to the templates file
+          if ! git diff --quiet src/features/templates/mountainlake/mountainlake-templates.ts; then
+            echo "❌ Template list is out of date!"
+            echo "Please run the addTemplate script for each new template and commit the changes."
+            echo ""
+            echo "Expected changes:"
+            git diff src/features/templates/mountainlake/mountainlake-templates.ts
+            exit 1
+          else
+            echo "✅ Template list is up to date"
+          fi
+          
+      - name: Comment on PR (success)
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '✅ All mountainlake templates are valid and the template list is up to date! 🏔️'
+            })
+            
+      - name: Comment on PR (failure)
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '❌ Template validation failed. Please check the validation errors above and fix them before merging. 🏔️'
+            })

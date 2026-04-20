@@ -1,0 +1,149 @@
+{
+  "name": "Light Monochrome",
+  "description": "Custom template: Light Monochrome",
+  "author": "LazerClippy",
+  "version": "1.0",
+  "createdAt": "2025-11-20T01:52:54.446Z",
+  "front": {
+    "bgGradientType": "solid",
+    "gradientType": "linear",
+    "bgSolidColor": "#ffffff",
+    "gradientAngle": 135,
+    "gradientStops": [
+      {
+        "offset": 0,
+        "color": "#F77F00"
+      },
+      {
+        "offset": 100,
+        "color": "#7209B7"
+      }
+    ],
+    "radialCenterX": 50,
+    "radialCenterY": 50,
+    "enableTopLeftIcon": true,
+    "topLeftIcon": "bitcoin",
+    "customLogoUrl": "",
+    "topLeftIconColor": "#000000",
+    "enableIconColorOverride": true,
+    "topLeftIconSize": 38,
+    "topLeftIconX": 0,
+    "topLeftIconY": 4,
+    "topLeftIconOpacity": 100,
+    "enableHeaderText": true,
+    "headerText": "Cashu Token\nRedeemable with Cashu\nWallet of choice",
+    "headerTextColor": "#000000",
+    "headerTextX": 150,
+    "headerTextY": 0,
+    "enableQrCode": true,
+    "qrGradientType": "solid",
+    "qrGradientAngle": 90,
+    "qrGradientStops": [
+      {
+        "offset": 0,
+        "color": "#FFFFFF"
+      },
+      {
+        "offset": 100,
+        "color": "#F0F0F0"
+      }
+    ],
+    "qrBackgroundColor": "#FFFFFF",
+    "qrBorderColor": "#FFFFFF",
+    "qrCodeColor": "#000000",
+    "disableQrBorder": false,
+    "disableQrBackground": false,
+    "qrX": 20,
+    "qrY": 78,
+    "enableDenomination": true,
+    "denominationColor": "#000000",
+    "bottomBoxColor": "#c0bfbc",
+    "bottomTextColor": "#3d3846",
+    "customBottomText": "",
+    "denominationX": 0,
+    "denominationY": 219,
+    "customImages": [],
+    "enableGuideText": false,
+    "guideText": "How to redeem:\n1. Download a Cashu wallet\n2. Scan the QR code\n3. Tokens are now in your wallet",
+    "guideTextColor": "#333333",
+    "guideBackgroundColor": "#FFFFFF",
+    "guideBorderColor": "#F77F00",
+    "disableGuideBorder": false,
+    "disableGuideBackground": false,
+    "guideX": 10,
+    "guideY": 90,
+    "guideWidth": 140,
+    "guideHeight": 100
+  },
+  "back": {
+    "bgGradientType": "solid",
+    "gradientType": "linear",
+    "bgSolidColor": "#FFFFFF",
+    "gradientAngle": 135,
+    "gradientStops": [
+      {
+        "offset": 0,
+        "color": "#F77F00"
+      },
+      {
+        "offset": 100,
+        "color": "#7209B7"
+      }
+    ],
+    "radialCenterX": 50,
+    "radialCenterY": 50,
+    "enableTopLeftIcon": true,
+    "topLeftIcon": "bitcoin",
+    "customLogoUrl": "",
+    "topLeftIconColor": "#000000",
+    "enableIconColorOverride": true,
+    "topLeftIconSize": 38,
+    "topLeftIconX": 0,
+    "topLeftIconY": 4,
+    "topLeftIconOpacity": 100,
+    "enableHeaderText": true,
+    "headerText": "Cashu Token\nRedeemable with Cashu\nWallet of choice",
+    "headerTextColor": "#000000",
+    "headerTextX": 150,
+    "headerTextY": 0,
+    "enableQrCode": false,
+    "qrGradientType": "solid",
+    "qrGradientAngle": 90,
+    "qrGradientStops": [
+      {
+        "offset": 0,
+        "color": "#FFFFFF"
+      },
+      {
+        "offset": 100,
+        "color": "#F0F0F0"
+      }
+    ],
+    "qrBackgroundColor": "#FFFFFF",
+    "qrBorderColor": "#F77F00",
+    "qrCodeColor": "#000000",
+    "disableQrBorder": false,
+    "disableQrBackground": false,
+    "qrX": 20,
+    "qrY": 93,
+    "enableDenomination": false,
+    "denominationColor": "#F77F00",
+    "bottomBoxColor": "#FFFFFF",
+    "bottomTextColor": "#666666",
+    "customBottomText": "",
+    "denominationX": 0,
+    "denominationY": 219,
+    "customImages": [],
+    "enableGuideText": true,
+    "guideText": "How to redeem:\n1. Download a Cashu wallet\n(For example: Minibits or Sovran)\n2. Set it up and navigate to the Receive tab\n2. Scan the QR code on Front\n3. Tokens are now in your wallet\n-\nTo Learn more about Cashu visit Cashu.space",
+    "guideTextColor": "#000000",
+    "guideBackgroundColor": "#F3F4F6",
+    "guideBorderColor": "#000000",
+    "disableGuideBorder": true,
+    "disableGuideBackground": false,
+    "guideX": 9,
+    "guideY": 99,
+    "guideWidth": 140,
+    "guideHeight": 76
+  }
+}

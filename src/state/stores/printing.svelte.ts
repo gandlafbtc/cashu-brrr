@@ -1,82 +1,51 @@
+/**
+ * Global State Management
+ * Handles application state using Svelte stores
+ */
 import type {
   CashuWallet,
   MintQuoteResponse,
   Proof,
   Token,
 } from "@cashu/cashu-ts";
-
 import { writable } from "svelte/store";
-import type { Mint } from "./utils";
+import type { Mint, Print, DiscoveredMint, Contact } from "@/types/cashu";
 import { SimplePool } from "nostr-tools";
 
-export type Print = {
-  tokens: Token[];
-  donation?: Token
-  mint: string;
-  ts: number;
-};
+// Initialize print history from localStorage
+const initialPrintsString = window.localStorage.getItem("prints") ?? "[]";
+const initialPrints: Print[] = JSON.parse(initialPrintsString);
 
-const initialValueSting: string = window.localStorage.getItem("prints") ?? "[]";
+// Initialize proofs from localStorage
+const initialProofsString = window.localStorage.getItem("proofs") ?? "[]";
+const initialProofs: Proof[] = JSON.parse(initialProofsString);
 
-let initialValue: Array<Print> = JSON.parse(initialValueSting);
-
-//migrate old prints
-if (initialValue[0]?.tokens[0]?.token) {
-  const newPrints: Print[] = [];
-  for (const print of initialValue) {
-    const newPrint: Print = {
-      mint: print.mint,
-      ts: print.ts,
-      tokens: print.tokens.map((t) => t.token[0]),
-    };
-    newPrints.push(newPrint);
-  }
-  initialValue = newPrints;
-}
-
-export const prints = writable<Array<Print>>(initialValue);
-
+// Stores with localStorage persistence
+export const prints = writable<Print[]>(initialPrints);
 prints.subscribe((value) => {
   window.localStorage.setItem("prints", JSON.stringify(value));
 });
 
-const initialValueStingProofs: string =
-  window.localStorage.getItem("proofs") ?? "[]";
-
-const initialValueProofs: Array<Proof> = JSON.parse(initialValueStingProofs);
-
-export const proofs = writable<Array<Proof>>(initialValueProofs);
-
+export const proofs = writable<Proof[]>(initialProofs);
 proofs.subscribe((value) => {
   window.localStorage.setItem("proofs", JSON.stringify(value));
 });
 
+// Wallet and mint stores
 export const wallet = writable<CashuWallet>();
 export const mint = writable<Mint>();
 
+// Application state
 export const step = writable<number>(1);
 export const selectedDenomination = writable<number>(1);
 export const selectedNumberOfNotes = writable<number>(1);
-export const donation = writable<number>(1);
+export const donation = writable<number>(0);
 export const preparedTokens = writable<Token[]>([]);
-
 export const currentQuote = writable<MintQuoteResponse>();
 
-export type DiscoveredMint = {
-  url: string;
-  reviews: number;
-};
-
-export type DiscoveredContact = {
-  url: string;
-  reviews: number;
-};
-export type Contact = {
-  npub: string
-  alias: string
-  picture?: string
-}
-
+/**
+ * Create a store for discovered mints with review tracking
+ */
 const createDiscoveredMintsStore = () => {
   const store = writable<DiscoveredMint[]>([]);
 
@@ -96,19 +65,24 @@ const createDiscoveredMintsStore = () => {
   return { ...store, add };
 };
 
+/**
+ * Create a store for discovered Nostr contacts
+ */
 const createDiscoveredContactsStore = () => {
   const store = writable<Contact[]>([]);
 
   const add = (npub: string, alias?: string, picture?: string) => {
-      store.update((context) => [...context, { npub, alias: alias?? '', picture }]);
-  }
+    store.update((contacts) => [
+      ...contacts,
+      { npub, alias: alias ?? "", picture },
+    ]);
+  };
 
-  return {...store, add}
-}
+  return { ...store, add };
+};
 
-export const discoveredContacts = createDiscoveredContactsStore()
-
-
+// Nostr-related stores
+export const discoveredContacts = createDiscoveredContactsStore();
 export const discoveredMints = createDiscoveredMintsStore();
 
-export const pool = new SimplePool()
+export const pool = new SimplePool();

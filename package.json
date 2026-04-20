@@ -7,16 +7,18 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "check": "svelte-check --tsconfig ./tsconfig.json"
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "addTemplate": "node scripts/addTemplate.mjs"
   },
   "devDependencies": {
-    "@cashu/cashu-ts": "^2.0.0-rc4",
+    "@cashu/cashu-ts": "^2.8.1",
     "@sveltejs/vite-plugin-svelte": "^4.0.0",
     "@tsconfig/svelte": "^5.0.0",
+    "@types/node": "^24.10.1",
     "autoprefixer": "^10.4.14",
     "daisyui": "^4.7.3",
     "lucide-svelte": "^0.461.0",
-    "nostr-tools": "^2.10.3",
+    "nostr-tools": "^2.23.3",
     "postcss": "^8.4.25",
     "prettier": "^3.3.3",
     "prettier-plugin-svelte": "^3.3.2",
@@ -27,9 +29,10 @@
     "tailwindcss": "^3.3.2",
     "tslib": "^2.6.0",
     "typescript": "^5.5.0",
-    "vite": "^5.4.4"
+    "vite": "^5.4.21"
   },
   "dependencies": {
+    "jspdf": "^3.0.3",
     "jszip": "^3.10.1",
     "qr": "^0.5.0"
   }

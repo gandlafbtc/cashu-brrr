@@ -1,19 +1,16 @@
 import {
   CashuMint,
   CashuWallet,
-  type GetInfoResponse,
   type MintActiveKeys,
-  type MintAllKeysets,
   type OutputAmounts,
   type Proof,
 } from "@cashu/cashu-ts";
 import {
-  selectedDenomination,
-  selectedNumberOfNotes,
   wallet,
-} from "./stores.svelte";
+} from "@/state/stores/printing.svelte";
 import { get } from "svelte/store";
 import { toast } from "svelte-sonner";
+import type { Mint } from "@/types/cashu";
 
 export const getAmountForTokenSet = (tokens: Array<Proof>): number => {
   return tokens.reduce((acc, t) => {
@@ -81,15 +78,11 @@ const formatFiat = (amount: number, unit?: string): string => {
   }).format(amount / 100);
 };
 
-export type Mint = {
-  url: string;
-  keys: MintActiveKeys;
-  keysets: MintAllKeysets;
-  info: GetInfoResponse;
-};
-
 export const loadMint = async (mintUrl: string): Promise<Mint> => {
   try {
+    if (!/^https?:\/\//i.test(mintUrl)) {
+      mintUrl = "https://" + mintUrl;
+    }
     const cashuMint = new CashuMint(mintUrl);
     const mintInfo = await cashuMint.getInfo();
     const mintAllKeysets = await cashuMint.getKeySets();
@@ -113,7 +106,7 @@ export const getWalletWithUnit = async (
   mint: Mint,
   unit = "sat",
 ): Promise<CashuWallet> => {
-  const keys = mint.keys.keysets.find((ks) => ks.unit);
+  const keys = mint.keys.keysets.find((ks) => ks.unit === unit);
   const keysets = mint.keysets.keysets.filter((ks) => ks.unit === unit);
   const wallet = new CashuWallet(new CashuMint(mint.url), {
     mintInfo: mint.info,
@@ -153,19 +146,31 @@ export const createOutputAmount = async (denomination: number) => {
     .map((k) => parseInt(k))
     .sort((a, b) => b - a);
   const constructedToken: number[] = [];
+  let remaining = denomination;
 
+  // Use greedy algorithm: start with largest denominations
   for (const amount of availableAmounts) {
-    const accumulated = constructedToken.reduce((acc, curr) => acc + curr, 0);
-    if (accumulated + amount < denomination) {
+    while (remaining >= amount) {
       constructedToken.push(amount);
-    } else if (accumulated + amount === denomination) {
-      constructedToken.push(amount);
+      remaining -= amount;
+    }
+
+    // Early exit if we've reached the target
+    if (remaining === 0) {
       return constructedToken;
     }
   }
-  throw new Error(
-    `Could not create amount ${denomination} from available amounts: ${availableAmounts.join(", ")}`,
-  );
+
+  // If we still have remainder, the denomination can't be constructed
+  if (remaining > 0) {
+    throw new Error(
+      `Could not create amount ${denomination} from available amounts: ${availableAmounts.join(
+        ", ",
+      )}. Missing ${remaining} sats.`,
+    );
+  }
+
+  return constructedToken;
 };
 
 export const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
